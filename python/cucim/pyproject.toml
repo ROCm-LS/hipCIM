@@ -1,0 +1,229 @@
+# Copyright (c) 2023-2024, AMD CORPORATION. All rights reserved.
+# See file LICENSE for terms.
+
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+    "setuptools>=61.0.0",
+    "wheel",
+    "setuptools_scm[toml]>=7.0"]
+
+[project]
+name = "amd-hipcim"
+dynamic = ["version" ]
+description = "hipCIM - an extensible toolkit designed to provide GPU accelerated I/O, computer vision & image processing primitives for N-Dimensional images with a focus on biomedical imaging."
+readme = { file = "README.md", content-type = "text/markdown" }
+authors = [
+    { name = "AMD Corporation" },
+]
+license = { text = "Apache 2.0" }
+requires-python = ">=3.10"
+dependencies = [
+    "click",
+    "lazy-loader>=0.4",
+    "numpy>=1.23.4,<3.0a0",
+    "scikit-image>=0.19.0,<0.26.0a0",
+    "scipy>=1.11.2",
+    "amd-cupy>=13.0.0",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Healthcare Industry",
+    "Topic :: Scientific/Engineering",
+    "Operating System :: POSIX :: Linux",
+    "Environment :: Console",
+    "Environment :: GPU :: AMD Instinct :: MI300",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: C++",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+
+# TODO: These are internal URLS for now. Change them to the external facing URL's before release.
+[project.urls]
+Homepage = "https://rocm.docs.amd.com/projects/hipcim/en/latest/"
+Documentation = "https://rocm.docs.amd.com/projects/hipcim/en/latest/reference/hipcim/index.html#hipcim-reference "
+Source = "https://github.com/AMD-AIOSS/hipCIM"
+Tracker = "https://github.com/AMD-AIOSS/hipCIM/issues"
+
+[project.optional-dependencies]
+test = [
+    "imagecodecs>=2021.6.8; platform_machine=='x86_64'",
+    "matplotlib>=3.7",
+    "numpydoc>=1.7",
+    "opencv-python-headless>=4.6",
+    "openslide-python>=1.3.0; platform_machine=='x86_64'",
+    "pooch>=1.6.0",
+    "psutil>=5.8.0",
+    "pytest-cov>=2.12.1",
+    "pytest-lazy-fixtures>=1.0.0",
+    "pytest-xdist",
+    "pytest>=7.0.0,<9.0.0a0",
+    "pywavelets>=1.6",
+    "tifffile>=2022.8.12",
+]  
+developer = [
+    "black",
+    "isort",
+    "pre-commit",
+    "ruff",
+]  
+docs = [
+    "ipython",
+    "nbsphinx",
+    "numpydoc>=1.7",
+    "pydata-sphinx-theme",
+    "recommonmark",
+    "sphinx>=8.0.0,<8.2.0",
+]  
+
+[project.entry-points."console_scripts"]
+cucim = "cucim.clara.cli:main"
+
+[tool.rapids-build-backend]
+build-backend = "setuptools.build_meta"
+commit-files = [
+    "src/cucim/COMMIT_FILE"
+]
+dependencies-file = "../../dependencies.yaml"
+requires = [
+    "wheel",
+]  
+
+[tool.setuptools]
+license-files = [
+    "LICENSE",
+    "LICENSE-3rdparty.md",
+]
+include-package-data = true
+
+[tool.setuptools_scm]
+# Automatically infer version and commit metadata from Git
+root = "../../"
+write_to = "python/cucim/src/hipcim/__version_tuple.py"
+
+
+[tool.setuptools.dynamic]
+version = {file = "src/hipcim/HIPCIM_VERSION"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+mypkg = ["*.pyi", "*.h", "*.cu", "HIPCIM_VERSION"]
+
+[tool.pydistcheck]
+select = [
+    "distro-too-large-compressed",
+]
+
+# PyPI limit is 100 MiB, fail CI before we get too close to that
+max_allowed_size_compressed = '75M'
+
+[tool.pytest.ini_options]
+# If a pytest section is found in one of the possible config files
+# (pytest.ini, tox.ini or setup.cfg), then pytest will not look for any others,
+# so if you add a pytest config section elsewhere,
+# you will need to delete this section from setup.cfg.
+norecursedirs = "migrations"
+python_files = [
+    "test_*.py",
+    "*_test.py",
+    "tests.py",
+]
+#skipping test_j_invariant.py for now due to NVRTC/HIPRTC compilation errors and src/cucim/skimage tests due to cupy HIPRTC errors
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--tb=short",
+    "--ignore-glob=build*",
+]
+testpaths = [
+    "src",
+    "tests",
+]
+filterwarnings = [
+    "error::FutureWarning",
+    "error::DeprecationWarning",
+    "ignore:pkg_resources is deprecated as an API:DeprecationWarning",
+]
+
+[tool.ruff]
+exclude = [
+    # TODO: Remove this in a follow-up where we fix __all__.
+    ".tox",
+    ".eggs",
+    "ci/templates",
+    "build",
+    "dist",
+    ".git",
+    "__pycache__",
+    "docs/source/conf.py",
+    "docs/source/ext",
+    "__init__.py",
+    "python/cucim/src/cucim/skimage/_vendored",
+]
+line-length = 80
+fix = true
+
+[tool.ruff.lint]
+# see: https://docs.astral.sh/ruff/rules/
+select = ["E", "F", "W", "I", "UP"]
+ignore = [
+    # (pycodestyle) Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
+    "E721",
+    # (pyupgrade) Use `X | Y` in `isinstance` call instead of `(X, Y)`
+    "UP038",
+]
+fixable = ["ALL"]
+
+[tool.ruff.lint.per-file-ignores]
+# "src/cucim/skimage/util/tests/test_shape.py" = ["E201", "E202"]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+force-single-line = false
+known-first-party = ["cucim"]
+order-by-type = true
+
+[tool.black]
+line-length = 80
+target-version = ["py310"]
+include = '\.py?$'
+exclude = '''
+/(
+    3rdparty |
+    thirdparty |
+    \.eggs |
+    \.git |
+    \.hg |
+    \.mypy_cache |
+    \.tox |
+    \.venv |
+    _build |
+    _deps |
+    cpp |
+    ci |
+    build |
+    build-debug |
+    build-release |
+    dist |
+    docker |
+    docs |
+)/
+'''
+
+[tool.codespell]
+# note: pre-commit passes explicit lists of files here, which this skip file list doesn't override -
+# this is only to allow you to run codespell interactively
+# e.g. via
+#   codespell --toml python/cucim/pyproject.toml . -i 3 -w
+skip = "build*,dist,.cache,html,_build,_deps,3rdparty/*,_static,generated,latex,.git,*.ipynb,test_data/input/LICENSE-3rdparty,jitify_testing"
+# ignore-regex = ""
+ignore-words-list = "ans,coo,boun,bui,gool,hart,lond,manuel,nd,paeth,unser,wronly"
+quiet-level = 3
+
+# to undo: ./test_data/input/LICENSE-3rdparty
