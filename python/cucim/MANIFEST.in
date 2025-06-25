@@ -1,0 +1,14 @@
+# https://packaging.python.org/guides/using-manifest-in/
+include .editorconfig
+
+include CHANGELOG.md
+include CONTRIBUTING.md
+include LICENSE
+include LICENSE-3rdparty.md
+include README.md
+
+include src/cucim/clara/*.so*
+
+recursive-include src/cucim *.py *.pyi *.cu *.h *.npy *.txt *.md
+
+global-exclude *.py[cod] __pycache__/*
