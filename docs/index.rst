@@ -32,7 +32,7 @@ Here are the key features of hipCIM:
 
 In essence, hipCIM provides a versatile platform that bridges the gap between different hardware ecosystems, thereby promoting flexibility and efficiency in the deployment of advanced image processing workloads.
 
-The code is open and hosted at `<>`_.
+The code is open and hosted at `<https://github.com/ROCm-LS/hipCIM>`_.
 
 The documentation is structured as follows:
 

@@ -161,3 +161,4 @@ tags
 # Doxygen files
 docs/doxygen/html
 docs/doxygen/xml
+docs/_doxygen
