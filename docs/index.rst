@@ -48,7 +48,7 @@ The documentation is structured as follows:
     * :ref:`supported-features`
 
 To contribute to the documentation, refer to
-:ref:`Contributing to ROCm-LS <rocm-ls-contribution>`.
+`Contributing to ROCm-LS <https://rocm.docs.amd.com/projects/rocm-ls/en/latest/contribution.html#rocm-ls-contribution>`_.
 
 You can find licensing information on the
-`Licensing <https://rocm.docs.amd.com/en/latest/about/license.html>`_ page.
+:doc:`Licensing <license>` page.
