@@ -38,7 +38,7 @@ hipCIM 1.0.00 is based on cuCIM 25.04.00 and includes the following features:
 
     * - | Whole slide imaging:
         | - Patch extraction operations are GPU-accelerated.
-        | - Metadata operations run exclusively on CPU.
+        | - Metadata operations run exclusively on the CPU.
       - ✅
 
     * - | Measurement functions:
