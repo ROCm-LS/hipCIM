@@ -173,7 +173,7 @@ Building hipCIM from source
 
 To build hipCIM from source, follow the steps given in this section. This installation method should be used by hipCIM developers.
 
-1. Set up docker image
+1. Set up the Docker image
 
    Use the ROCm docker image from dockerhub:
 
