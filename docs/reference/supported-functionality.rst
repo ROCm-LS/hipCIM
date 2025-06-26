@@ -22,7 +22,7 @@ hipCIM 1.0.00 is based on cuCIM 25.04.00 and includes the following features:
 
     * - | Image processing (cucim.skimage):
         | - Nearly all transform operations (resize, rotate, and warp) are GPU-accelerated with CPU fallbacks.
-        | - Complete filter suite (gaussian, median, and edge detectors) benefits from GPU acceleration.
+        | - Complete filter suite (Gaussian, median, and edge detectors) benefits from GPU acceleration.
         | - Most morphological operations (erosion, dilation, and opening) are GPU-accelerated.
       - ✅
 
