@@ -28,7 +28,7 @@ hipCIM 1.0.00 is based on cuCIM 25.04.00 and includes the following features:
 
     * - | Segmentation:
         | - Several advanced segmentation algorithms (felzenszwalb, quickshift, and active_contour) lack GPU acceleration.
-        | - Core segmentation operations like watershed and SLIC are GPU-accelerated.
+        | - Core segmentation operations such as watershed and SLIC are GPU-accelerated.
       - ✅
 
     * - | Color operations:
