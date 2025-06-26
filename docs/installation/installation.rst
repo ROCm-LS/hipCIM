@@ -31,14 +31,16 @@ Also, install the following ROCm components before installing hipCIM:
 
 - `amd-cupy <https://pypi.amd.com/simple/amd-cupy/>`_ 13.0 or later
 
+.. _install-package:
+
 Installing hipCIM using AMD PyPI
 *********************************
 
-Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <https://pypi.amd.com/simple/>`_. This section discusses how to install hipCIM using this package index. This installation method should be used by hipCIM users.
+Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <https://pypi.amd.com/simple/>`_. This section discusses how to install hipCIM using this package index. This installation method should be used by hipCIM users. hipCIM developers should use the :ref:`source-build`
 
-1. Optional: Use ROCm docker to get started:
+1. Optional: Use ROCm Docker to get started:
 
-   To run it inside a docker, use:
+   To run it inside a Docker, use:
 
    .. code-block:: shell
 
@@ -113,8 +115,8 @@ Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <
       Project-URLs:
          Homepage, https://rocm.docs.amd.com/projects/hipcim/en/latest/
          Documentation, https://rocm.docs.amd.com/projects/hipcim/en/latest/reference/hipcim/index.html#hipcim-reference
-         Source, https://github.com/AMD-AIOSS/hipCIM
-         Tracker, https://github.com/AMD-AIOSS/hipCIM/issues
+         Source, https://github.com/ROCm-LS/hipCIM
+         Tracker, https://github.com/ROCm-LS/hipCIM/issues
 
 6. Checkout the sample jupyter notebooks
 
@@ -168,14 +170,16 @@ Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <
       [Warning] Loading image('oxford.tif') with a slow-path. The pixel format of the loaded image would be RGBA (4 channels) instead of RGB!
       cuda
 
+.. _source-build:
+
 Building hipCIM from source
 ****************************
 
-To build hipCIM from source, follow the steps given in this section. This installation method should be used by hipCIM developers.
+To build hipCIM from source, follow the steps given in this section. This installation method should be used by hipCIM developers. hipCIM users should use the :ref:`install-package`
 
 1. Set up the Docker image
 
-   Use the ROCm docker image from dockerhub:
+   Use the ROCm Docker image from Dockerhub:
 
    .. code-block:: shell
 
@@ -204,7 +208,7 @@ To build hipCIM from source, follow the steps given in this section. This instal
 
    .. code-block:: shell
 
-      git clone git@github.com:AMD-AIOSS/hipCIM.git
+      git clone git@github.com:ROCm-LS/hipCIM.git
       cd hipCIM
 
 4. Create and activate the development environment for building hipCIM
