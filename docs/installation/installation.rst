@@ -62,7 +62,7 @@ Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <
                   hipblas-dev hipfft hipsparse \
                   hiprand rocsolver rocrand-dev
 
-3. Create Python virtual environment:
+3. Create the Python virtual environment:
 
    .. code-block:: shell
 
