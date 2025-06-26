@@ -23,7 +23,7 @@ Prerequisites
 
 - Python 3.10 or later
 
-- AMD Instinct MI300 (gfx942)
+- AMD Instinct MI300 series accelerators (gfx942)
 
 Also, install the following ROCm components before installing hipCIM:
 
