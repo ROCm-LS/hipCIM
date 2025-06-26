@@ -16,19 +16,19 @@ The hipCIM library is a robust open-source solution developed to significantly a
 
 One of the key strengths of hipCIM is its comprehensive suite of tools designed to facilitate the development of sophisticated image processing applications. Derived from the NVIDIA RAPIDS® open-source project cuCIM, hipCIM maintains full API compatibility with the NVIDIA cuCIM library, which is pivotal for developers looking to transition workloads to AMD devices seamlessly. This feature eliminates the need for :doc:`hipification <hipify:index>`, allowing for a smoother migration process without altering the existing codebase.
 
-Here are the key features of hipCIM:
+hipCIM key features include :
 
-- **Efficient image I/O:** Expedites loading and saving of images, especially large ones like those in digital pathology.
+- **Efficient image I/O**–Expedites loading and saving of images, especially large ones like those in digital pathology.
 
-- **N-dimensional image processing:** Enables processing of multidimensional images, which is common in biomedical imaging and other fields.
+- **N-dimensional image processing**–Enables processing of multidimensional images, which is common in biomedical imaging and other fields.
 
-- **GPU acceleration:** Leverages the power of GPUs to expedite computationally intensive tasks like image processing.
+- **GPU acceleration**–Leverages the power of GPUs to expedite computationally intensive tasks like image processing.
 
-- **Extensible toolkit:** Offers both C++ and Python APIs, as well as a flexible mechanism for extensions using plugins.
+- **Extensible toolkit**–Offers both C++ and Python APIs, as well as a flexible mechanism for extensions using plugins.
 
-- **Interoperability:** Can be used with other libraries in the ROCm-LS ecosystem and easily interoperate with libraries like `CuPy <https://cupy.dev/>`_.
+- **Interoperability**–Can be used with other libraries in the ROCm-LS ecosystem and easily interoperate with libraries like `CuPy <https://cupy.dev/>`_.
 
-- **Accelerated workflows:** Helps accelerate workflows in digital pathology and other fields that utilize large, high-resolution images.
+- **Accelerated workflows**–Helps accelerate workflows in digital pathology and other fields that utilize large, high-resolution images.
 
 In essence, hipCIM provides a versatile platform that bridges the gap between different hardware ecosystems, thereby promoting flexibility and efficiency in the deployment of advanced image processing workloads.
 
