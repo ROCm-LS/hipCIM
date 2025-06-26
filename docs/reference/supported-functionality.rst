@@ -33,7 +33,7 @@ hipCIM 1.0.00 is based on cuCIM 25.04.00 and includes the following features:
 
     * - | Color operations:
         | - All color space conversions (rgb2gray, rgb2hsv, and rgb2lab) are GPU-accelerated.
-        | - Specialized operations for medical imaging like stain separation or combination also benefit from GPU acceleration.
+        | - Specialized operations for medical imaging, such as stain separation or combination, also benefit from GPU acceleration.
       - ✅
 
     * - | Whole slide imaging:
