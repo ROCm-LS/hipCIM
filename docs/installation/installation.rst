@@ -27,7 +27,7 @@ Prerequisites
 
 Also, install the following ROCm components before installing hipCIM:
 
-- :doc:`rocJPEG <rocJPEG:index>`
+- `rocJPEG <https://rocm.docs.amd.com/projects/rocJPEG/en/latest/>`_
 
 - `amd-cupy <https://pypi.amd.com/simple/amd-cupy/>`_ 13.0 or later
 
