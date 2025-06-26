@@ -10,34 +10,43 @@ Supported hipCIM functionality
 
 hipCIM 1.0.00 is based on `cuCIM 25.04.00 <https://github.com/rapidsai/cucim/tree/branch-25.04>`_ and includes the following features:
 
-.. list-table::
+- Core image interface (cucim.core):
 
-    * - **Functionality**
+  - All primary image manipulation functions (read, write, and resample) are GPU-accelerated with CPU fallbacks.
 
-    * - | Core image interface (cucim.core):
-        | - All primary image manipulation functions (read, write, and resample) are GPU-accelerated with CPU fallbacks.
-        | - Metadata operations (accessing dtype, dims, and shape) run on CPU only.
+  - Metadata operations (accessing dtype, dims, and shape) run on CPU only.
 
-    * - | Image processing (cucim.skimage):
-        | - Nearly all transform operations (resize, rotate, and warp) are GPU-accelerated with CPU fallbacks.
-        | - Complete filter suite (Gaussian, median, and edge detectors) benefits from GPU acceleration.
-        | - Most morphological operations (erosion, dilation, and opening) are GPU-accelerated.
+- Image processing (cucim.skimage):
 
-    * - | Segmentation:
-        | - Several advanced segmentation algorithms (felzenszwalb, quickshift, and active_contour) lack GPU acceleration.
-        | - Core segmentation operations such as watershed and SLIC are GPU-accelerated.
+  - Nearly all transform operations (resize, rotate, and warp) are GPU-accelerated with CPU fallbacks.
 
-    * - | Color operations:
-        | - All color space conversions (rgb2gray, rgb2hsv, and rgb2lab) are GPU-accelerated.
-        | - Specialized operations for medical imaging, such as stain separation or combination, also benefit from GPU acceleration.
+  - Complete filter suite (Gaussian, median, and edge detectors) benefits from GPU acceleration.
 
-    * - | Whole slide imaging:
-        | - Patch extraction operations are GPU-accelerated.
-        | - Metadata operations run exclusively on the CPU.
+  - Most morphological operations (erosion, dilation, and opening) are GPU-accelerated.
 
-    * - | Measurement functions:
-        | - Core measurement functions like region labeling are GPU-accelerated.
-        | - Some advanced functions like ``marching_cubes`` lack GPU acceleration.
+- Segmentation:
+
+  - Several advanced segmentation algorithms (felzenszwalb, quickshift, and active_contour) lack GPU acceleration.
+
+  - Core segmentation operations such as watershed and SLIC are GPU-accelerated.
+
+- Color operations:
+
+  - All color space conversions (rgb2gray, rgb2hsv, and rgb2lab) are GPU-accelerated.
+
+  - Specialized operations for medical imaging, such as stain separation or combination, also benefit from GPU acceleration.
+
+- Whole slide imaging:
+
+  - Patch extraction operations are GPU-accelerated.
+
+  - Metadata operations run exclusively on the CPU.
+
+- Measurement functions:
+
+  - Core measurement functions like region labeling are GPU-accelerated.
+
+  - Some advanced functions like ``marching_cubes`` lack GPU acceleration.
 
 Limitations
 ------------

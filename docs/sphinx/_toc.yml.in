@@ -11,6 +11,7 @@ subtrees:
 - caption: Reference
   entries:
   - file: reference/supported-functionality
+    title: Supported functionality
 - caption: About
   entries:
   - file: license
