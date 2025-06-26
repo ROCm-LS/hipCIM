@@ -14,7 +14,7 @@ hipCIM documentation
 
 The hipCIM library is a robust open-source solution developed to significantly accelerate computer vision and image processing capabilities, particularly for multidimensional images. The hipCIM library provides powerful support for GPU-accelerated I/O operations, coupled with an array of computer vision and image processing primitives designed for N-dimensional image data in fields such as biomedical imaging. It facilitates efficient loading and processing of images from modalities such as digital pathology, CT, MR, and PET.
 
-One of the key strengths of hipCIM is its comprehensive suite of tools designed to facilitate the development of sophisticated image processing applications. Derived from the NVIDIA RAPIDS® open-source project cuCIM, hipCIM maintains full API compatibility with the `NVIDIA cuCIM library <https://github.com/rapidsai/cucim/tree/branch-25.04>`_, which is pivotal for developers looking to transition workloads to AMD devices seamlessly. This feature eliminates the need for :doc:`hipification <hipify:index>`, allowing for a smoother migration process without altering the existing codebase.
+One of the key strengths of hipCIM is its comprehensive suite of tools designed to facilitate the development of sophisticated image processing applications. Derived from the NVIDIA RAPIDS™ open-source project cuCIM, hipCIM maintains full API compatibility with the `NVIDIA cuCIM library <https://github.com/rapidsai/cucim/tree/branch-25.04>`_, which is pivotal for developers looking to transition workloads to AMD devices seamlessly. This feature eliminates the need for :doc:`hipification <hipify:index>`, allowing for a smoother migration process without altering the existing codebase.
 
 hipCIM key features include:
 
