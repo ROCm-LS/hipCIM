@@ -1,11 +1,8 @@
 # <div align="left">&nbsp;hipCIM&nbsp;</div>
 
-## hipCIM 
+## hipCIM
 hipCIM is a [HIP](https://github.com/ROCm/hip) port of the [cuCIM](https://github.com/rapidsai/cucim) library under the [RAPIDS](https://github.com/rapidsai)™ ecosystem.
 This library is an extensible toolkit designed to provide GPU accelerated I/O, computer vision & image processing primitives for N-Dimensional images with a focus on biomedical imaging.
-
-### Resources
-- [hipCIM API reference](https://rocm.docs.amd.com/projects/hipCIM/en/latest/reference/hipcim/index.html#hipcim-reference)
 
 ### Install hipCIM via AMD PyPI
 
@@ -27,12 +24,12 @@ This library is an extensible toolkit designed to provide GPU accelerated I/O, c
                hiprand rocsolver rocrand-dev
 	pip install --upgrade pip
 	```
-	
+
 - Create a python virtual environment
 	```
 	python3 -m venv hipcim_build
 	source hipcim_build/bin/activate
-    
+
     #install hipCIM
 	pip install amd-hipcim --extra-index-url=https://pypi.amd.com/simple
 	```
@@ -67,7 +64,7 @@ This library is an extensible toolkit designed to provide GPU accelerated I/O, c
    ```
 - Try out other notebooks.
 ### Build hipCIM from source
-Please use the below steps to build the hipCIM library on a ROCM based MI300 system from source. 
+Please use the below steps to build the hipCIM library on a ROCM based MI300 system from source.
 
 - Use the complete rocm docker image from dockerhub
 	```
