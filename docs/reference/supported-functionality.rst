@@ -10,13 +10,13 @@ Supported hipCIM functionality
 
 hipCIM 1.0.00 is based on `cuCIM 25.04.00 <https://github.com/rapidsai/cucim/tree/branch-25.04>`_ and includes the following features:
 
-- Core image interface (cucim.core):
+- **Core image interface (cucim.core):**
 
   - All primary image manipulation functions (read, write, and resample) are GPU-accelerated with CPU fallbacks.
 
   - Metadata operations (accessing dtype, dims, and shape) run on CPU only.
 
-- Image processing (cucim.skimage):
+- **Image processing (cucim.skimage):**
 
   - Nearly all transform operations (resize, rotate, and warp) are GPU-accelerated with CPU fallbacks.
 
@@ -24,25 +24,25 @@ hipCIM 1.0.00 is based on `cuCIM 25.04.00 <https://github.com/rapidsai/cucim/tre
 
   - Most morphological operations (erosion, dilation, and opening) are GPU-accelerated.
 
-- Segmentation:
+- **Segmentation:**
 
   - Several advanced segmentation algorithms (felzenszwalb, quickshift, and active_contour) lack GPU acceleration.
 
   - Core segmentation operations such as watershed and SLIC are GPU-accelerated.
 
-- Color operations:
+- **Color operations:**
 
   - All color space conversions (rgb2gray, rgb2hsv, and rgb2lab) are GPU-accelerated.
 
   - Specialized operations for medical imaging, such as stain separation or combination, also benefit from GPU acceleration.
 
-- Whole slide imaging:
+- **Whole slide imaging:**
 
   - Patch extraction operations are GPU-accelerated.
 
   - Metadata operations run exclusively on the CPU.
 
-- Measurement functions:
+- **Measurement functions:**
 
   - Core measurement functions like region labeling are GPU-accelerated.
 
