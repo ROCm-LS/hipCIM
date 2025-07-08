@@ -61,8 +61,8 @@ Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <
       sudo apt update
       sudo apt install -y lsb-release software-properties-common libopenslide0 python3.10-venv rocjpeg
       sudo apt install -y rocthrust-dev hipcub hipblas \
-                  hipblas-dev hipfft hipsparse \
-                  hiprand rocsolver rocrand-dev
+                  hipblas-dev hipfft hipsparse      \
+                  hiprand rocsolver rocrand-dev git git-lfs
 
 3. Create the Python virtual environment:
 
@@ -84,13 +84,13 @@ Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <
 
       $pip show -v amd-hipcim
       Name: amd-hipcim
-      Version: 1.0.0b0
+      Version: 1.0.0
       Summary: hipCIM - an extensible toolkit designed to provide GPU accelerated I/O, computer vision & image processing primitives for N-Dimensional images with a focus on biomedical imaging.
       Home-page: https://rocm.docs.amd.com/projects/hipcim/en/latest/
       Author: AMD Corporation
       Author-email:
       License: Apache 2.0
-      Location: <your venv path>/lib/python3.10/site-packages
+      Location: /home/integration/hipCIM/dev/lib/python3.10/site-packages
       Requires: click, lazy-loader, numpy, scikit-image, scipy
       Required-by:
       Metadata-Version: 2.4
@@ -115,7 +115,7 @@ Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <
       Project-URLs:
          Homepage, https://rocm.docs.amd.com/projects/hipcim/en/latest/
          Documentation, https://rocm.docs.amd.com/projects/hipcim/en/latest/reference/hipcim/index.html#hipcim-reference
-         Source, https://github.com/ROCm-LS/hipCIM
+         Source, https://github.com/ROCm-LS/hipCIM/
          Tracker, https://github.com/ROCm-LS/hipCIM/issues
 
 6. Checkout the sample jupyter notebooks
@@ -123,24 +123,10 @@ Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <
    .. code-block:: shell
 
       pip install notebook
-      git clone --depth 1 git@github.com:ROCm-LS/hipCIM.git hipcim-notebooks && cd hipcim-notebooks && git filter-branch --prune-empty --subdirectory-filter notebooks HEAD
-
-7. Download sample images
-
-   To download images used in the notebooks, execute the following commands from the repository's root folder. This copies sample input images into notebooks or input folder.
-
-   .. code-block:: shell
-
-      ./run_amd download_testdata
-
-   Or use:
-
-   .. code-block:: shell
-
-      mkdir -p notebooks/input
-      tmp_id=$(docker create gigony/svs-testdata:little-big)
-      docker cp $tmp_id:/input notebooks
-      docker rm -v ${tmp_id}
+      git clone --depth 1 git@github.com:ROCm-LS/hipCIM.git hipcim-notebooks && \
+         cd hipcim-notebooks && \
+         git filter-branch --prune-empty --subdirectory-filter notebooks HEAD
+      git lfs pull
 
 7. Run a sample program
 
