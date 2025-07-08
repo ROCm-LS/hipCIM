@@ -90,7 +90,7 @@ Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <
       Author: AMD Corporation
       Author-email:
       License: Apache 2.0
-      Location: /home/integration/hipCIM/dev/lib/python3.12/site-packages
+      Location: /home/integration/hipCIM/dev/lib/python3.10/site-packages
       Requires: click, lazy-loader, numpy, scikit-image, scipy
       Required-by:
       Metadata-Version: 2.4
