@@ -24,24 +24,25 @@ This library is an extensible toolkit designed to provide GPU accelerated I/O, c
                hiprand rocsolver rocrand-dev
 	pip install --upgrade pip
 	```
-
 - Create a python virtual environment
 	```
 	python3 -m venv hipcim_build
 	source hipcim_build/bin/activate
 
-    #install hipCIM
+        # Install hipCIM
 	pip install amd-hipcim --extra-index-url=https://pypi.amd.com/simple
 	```
 
- - Checkout jupyter notebooks
+- Checkout jupyter notebooks
    ```
    pip install notebook
    git clone --depth 1 git@github.com:ROCm-LS/hipCIM.git hipcim-notebooks \
       && cd hipcim-notebooks \
       && git filter-branch --prune-empty --subdirectory-filter notebooks HEAD
+   git lfs pull
    ```
- - Run a sample program
+
+- Run a sample program
    ```python
     from cucim import CuImage
     img = CuImage("oxford.tif")
@@ -54,7 +55,8 @@ This library is an extensible toolkit designed to provide GPU accelerated I/O, c
     region = img.read_region([0,0], level_dimensions[level_count - 1], level_count - 1, device="cuda")
     print(region.device)
    ```
- - Output
+
+- Output
    ```
     {'level_count': 1, 'level_dimensions': ((601, 81),), 'level_downsamples': (1.0,), 'level_tile_sizes': ((0, 0),)}
     1
@@ -63,6 +65,7 @@ This library is an extensible toolkit designed to provide GPU accelerated I/O, c
     cuda
    ```
 - Try out other notebooks.
+
 ### Build hipCIM from source
 Please use the below steps to build the hipCIM library on a ROCM based MI300 system from source.
 
@@ -128,7 +131,6 @@ Please use the below steps to build the hipCIM library on a ROCM based MI300 sys
   ./run_amd test cpp release
   ```
 
-
 - Run all python unit tests
   ```bash
   ./run_amd test_python
@@ -137,24 +139,6 @@ Please use the below steps to build the hipCIM library on a ROCM based MI300 sys
 ### Notebooks
 
 Please check out our [Welcome](notebooks/Welcome.ipynb) notebook.
-
-#### Downloading sample images
-
-To download images used in the notebooks, please execute the following commands from the repository root folder to copy sample input images into `notebooks/input` folder:
-
-
-
-```bash
-./run_amd download_testdata
-```
-or
-
-```bash
-mkdir -p notebooks/input
-tmp_id=$(docker create gigony/svs-testdata:little-big)
-docker cp $tmp_id:/input notebooks
-docker rm -v ${tmp_id}
-```
 
 ## Contributing Guide
 
