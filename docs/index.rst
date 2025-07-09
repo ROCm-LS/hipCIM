@@ -47,6 +47,10 @@ The documentation is structured as follows:
 
     * :ref:`supported-features`
 
+  .. grid-item-card:: Related content
+
+    * `hipCIM blogs <https://advanced-micro-devices-rocm-blogs--1094.com.readthedocs.build/projects/internal/en/1094/software-tools-optimization/hipcim-intro/README.html>`_
+
 To contribute to the documentation, refer to
 `Contributing to ROCm-LS <https://rocm.docs.amd.com/projects/rocm-ls/en/latest/contribute/contribution.html>`_.
 
