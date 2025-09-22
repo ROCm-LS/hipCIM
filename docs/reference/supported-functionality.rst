@@ -57,9 +57,9 @@ hipCIM supports the following image formats:
 
 - Single level Philips TIFF with JPEG compression
 
-Note that the image support is limited by [rocJPEG chroma subsampling and hardware capabilities](https://rocm.docs.amd.com/projects/rocJPEG/en/latest/reference/rocjpeg-formats-and-architectures.html).
+Note that the image support is limited by `rocJPEG chroma subsampling and hardware capabilities <https://rocm.docs.amd.com/projects/rocJPEG/en/latest/reference/rocjpeg-formats-and-architectures.html>`_.
 
-hipCIM API mirrors [scikit-image](https://scikit-image.org/) for image manipulation and [OpenSlide](https://openslide.org/) for image loading.
+hipCIM API mirrors `scikit-image <https://scikit-image.org/>`_ for image manipulation and `OpenSlide <https://openslide.org/>`_ for image loading.
 
 Limitations
 ------------
