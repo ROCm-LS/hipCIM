@@ -48,6 +48,19 @@ hipCIM 1.0.00 is based on `cuCIM 25.04.00 <https://github.com/rapidsai/cucim/tre
 
   - Some advanced functions like ``marching_cubes`` lack GPU acceleration.
 
+Image support
+--------------
+
+hipCIM supports the following image formats:
+
+- Single level Aperio ScanScope Virtual Slide (SVS) with JPEG compression
+
+- Single level Philips TIFF with JPEG compression
+
+Note that the image support is limited by [rocJPEG chroma subsampling and hardware capabilities](https://rocm.docs.amd.com/projects/rocJPEG/en/latest/reference/rocjpeg-formats-and-architectures.html).
+
+hipCIM API mirrors [scikit-image](https://scikit-image.org/) for image manipulation and [OpenSlide](https://openslide.org/) for image loading.
+
 Limitations
 ------------
 
