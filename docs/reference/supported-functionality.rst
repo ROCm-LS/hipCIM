@@ -4,11 +4,14 @@
 
 .. _supported-features:
 
-*******************************
-Supported hipCIM functionality
-*******************************
+***********************************
+Supported features and limitations
+***********************************
 
-hipCIM 1.0.00 is based on `cuCIM 25.04.00 <https://github.com/rapidsai/cucim/tree/branch-25.04>`_ and includes the following features:
+This topic discusses the features and limitations for hipCIM.
+
+Features
+---------
 
 - **Core image interface (cucim.core):**
 
@@ -72,7 +75,7 @@ Limitations
 
 - No Dask support
 
-- The following image processing operations are not supported:
+- No support for the following image processing operations:
 
   - affine, similarity, euclidean , threshold_niblack , threshold_sauvola, convex_hull_image ,corner_fast ,denoise_bilateral, denoise_wavelet, wiener, richardson_lucy, unsupervised_wiener, estimate_sigma, random_walker, felzenszwalb,slic, quickshift, watershed, active_contour and all exposure operations.
 
