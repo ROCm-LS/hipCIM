@@ -14,8 +14,8 @@ This topic discusses how to install hipCIM using the following options:
 
 - Build from source (for developers)
 
-Prerequisites
-**************
+System requirements
+********************
 
 - Ubuntu 22.04 or later
 
@@ -23,7 +23,7 @@ Prerequisites
 
 - Python 3.10 or later
 
-- AMD Instinct MI300 series accelerators (gfx942)
+- AMD Instinct MI300X GPUs
 
 Also, install the following ROCm components before installing hipCIM:
 
