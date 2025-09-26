@@ -17,13 +17,13 @@ This topic discusses how to install hipCIM using the following options:
 System requirements
 ********************
 
-- Ubuntu 22.04 or later
+- Ubuntu version: 22.04
 
-- ROCm 6.4.0 or later
+- ROCm version: 6.4.3
 
-- Python 3.10 or later
+- Python version: 3.10
 
-- AMD Instinct MI300X GPUs
+- AMD GPU: AMD Instinct MI300X GPUs
 
 Also, install the following ROCm components before installing hipCIM:
 
