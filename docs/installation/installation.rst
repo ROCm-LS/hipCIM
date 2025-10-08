@@ -10,9 +10,9 @@ Installing hipCIM
 
 This topic discusses how to install hipCIM using the following options:
 
-- AMD PyPI (for users)
+- :ref:`AMD PyPI (for users) <install-package>`
 
-- Build from source (for developers)
+- :ref:`Build from source (for developers) <source-build>`
 
 System requirements
 ********************
@@ -23,7 +23,7 @@ System requirements
 
 - Python version: 3.10
 
-- AMD GPU: AMD Instinct MI300X GPUs
+- AMD GPU: AMD Instinct MI300X
 
 Also, install the following ROCm components before installing hipCIM:
 
@@ -38,9 +38,7 @@ Installing hipCIM using AMD PyPI
 
 Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <https://pypi.amd.com/simple/>`_. This section discusses how to install hipCIM using this package index. This installation method should be used by hipCIM users. hipCIM developers should use the :ref:`source-build`
 
-1. Optional: Use ROCm Docker to get started:
-
-   To run it inside a Docker, use:
+1. Optional: Use ROCm Docker to get started.
 
    .. code-block:: shell
 
@@ -54,7 +52,7 @@ Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <
 
    For bare metal, skip this step.
 
-2. Install system dependencies:
+2. Install system dependencies.
 
    .. code-block:: shell
 
@@ -64,7 +62,7 @@ Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <
                   hipblas-dev hipfft hipsparse      \
                   hiprand rocsolver rocrand-dev git git-lfs
 
-3. Create the Python virtual environment:
+3. Create the Python virtual environment.
 
    .. code-block:: shell
 
@@ -72,13 +70,13 @@ Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <
       python3 -m venv hipcim
       source hipcim/bin/activate
 
-4. Install hipCIM using pip
+4. Install hipCIM using pip.
 
    .. code-block:: shell
 
       pip install amd-hipcim --extra-index-url=https://pypi.amd.com/simple
 
-5. Verify installation
+5. Verify installation.
 
    .. code-block:: shell
 
@@ -118,7 +116,7 @@ Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <
          Source, https://github.com/ROCm-LS/hipCIM/
          Tracker, https://github.com/ROCm-LS/hipCIM/issues
 
-6. Checkout the sample jupyter notebooks
+6. Checkout the sample jupyter notebooks.
 
    .. code-block:: shell
 
@@ -128,7 +126,7 @@ Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <
          git filter-branch --prune-empty --subdirectory-filter notebooks HEAD
       git lfs pull
 
-7. Run a sample program
+7. Run a sample program.
 
    .. code-block:: shell
 
@@ -163,9 +161,7 @@ Building hipCIM from source
 
 To build hipCIM from source, follow the steps given in this section. This installation method should be used by hipCIM developers. hipCIM users should use the :ref:`install-package`
 
-1. Set up the Docker image
-
-   Use the ROCm Docker image from Dockerhub:
+1. Set up the Docker image using the ROCm Docker image from Dockerhub.
 
    .. code-block:: shell
 
@@ -176,7 +172,7 @@ To build hipCIM from source, follow the steps given in this section. This instal
          -v $HOME:$HOME  --name ${LOGNAME}_rocm                \
                                            rocm/dev-ubuntu-22.04
 
-2. Install required system dependencies for hipCIM
+2. Install the required system dependencies.
 
    .. code-block:: shell
 
@@ -188,16 +184,14 @@ To build hipCIM from source, follow the steps given in this section. This instal
       sudo apt install -y git wget gcc g++ ninja-build git \
                     yasm libopenslide-dev python3.10-venv cmake rocjpeg rocjpeg-dev
 
-3. Download the hipCIM repository
-
-   Checkout the latest version of hipCIM from the git repository:
+3. Download the latest version of hipCIM from the git repository.
 
    .. code-block:: shell
 
       git clone git@github.com:ROCm-LS/hipCIM.git
       cd hipCIM
 
-4. Create and activate the development environment for building hipCIM
+4. Create and activate the development environment for building hipCIM.
 
    .. code-block:: shell
 
@@ -206,37 +200,39 @@ To build hipCIM from source, follow the steps given in this section. This instal
       pip install --upgrade pip
       pip install -r requirements.txt
 
-5. Build and install hipCIM
+5. Build and install hipCIM.
 
    To build the hipCIM library on a ROCm-based AMD system using the development environment, follow these steps:
 
-   1. Build the base C++ libraries
+   1. Build the base C++ libraries.
 
    .. code-block:: shell
 
       ./run_amd build_local cpp release
 
-   2. Build the Python bindings
+   2. Build the Python bindings.
 
    .. code-block:: shell
 
       ./run_amd build_local hipcim release
 
-   3. Install the Python bindings
+   3. Install the Python bindings.
 
    .. code-block:: shell
 
       python -m pip install python/cucim --extra-index-url https://pypi.amd.com/simple
 
-6. Verify the installation
+6. Verify the installation.
 
-   1. Execute the tests in the base C++ libraries
+   To verify the installation, follow these steps:
+
+   1. Execute the tests in the base C++ libraries.
 
    .. code-block:: shell
 
       ./run_amd test cpp release
 
-   2. Execute the Python tests
+   2. Execute the Python tests.
 
    .. code-block:: shell
 
@@ -245,12 +241,12 @@ To build hipCIM from source, follow the steps given in this section. This instal
 Support and limitations
 ************************
 
-The hipCIM support is limited to C++ and Python interfaces.
+- The hipCIM support is limited to C++ and Python interfaces.
 
-There is no support for:
+- There is no support for:
 
-- GPU direct storage (KvikIO, cuFile)
+  - GPU direct storage (KvikIO, cuFile)
 
-- rocTX tracing
+  - rocTX tracing
 
-hipCIM only supports features from amd-cupy 13.0 and later.
+- hipCIM only supports features from amd-cupy 13.0 and later.

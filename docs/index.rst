@@ -47,6 +47,10 @@ The documentation is structured as follows:
 
     * :ref:`supported-features`
 
+  .. grid-item-card:: Related content
+
+    * `hipCIM blogs <https://rocm.blogs.amd.com/software-tools-optimization/hipcim-intro/README.html>`_
+
 To contribute to hipCIM, refer to
 `Contributing to hipCIM <https://github.com/ROCm-LS/hipCIM/blob/main/CONTRIBUTING.md>`_.
 
