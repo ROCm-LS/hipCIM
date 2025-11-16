@@ -23,6 +23,7 @@
 
 #include "cucim/profiler/nvtx3.h"
 #include "cucim/util/cuda.h"
+#include <cucim/cuda_runtime.h>
 
 namespace cucim::loader
 {
@@ -70,7 +71,12 @@ ThreadBatchDataLoader::ThreadBatchDataLoader(LoadFunc load_func,
         case io::DeviceType::kCUDA: {
             cudaError_t cuda_status;
             void* image_data_ptr = nullptr;
-            CUDA_ERROR(cudaMalloc(&image_data_ptr, buffer_size_));
+            cuda_status = cudaMalloc(&image_data_ptr, buffer_size_);
+            if (cuda_status != cudaSuccess) {
+                // Handle error
+                fprintf(stderr, "cudaMalloc failed: %s\n", cudaGetErrorString(cuda_status));
+                exit(1); // Appropriate error handling
+            }
             raster_data_.emplace_back(static_cast<uint8_t*>(image_data_ptr));
             break;
         }
@@ -78,7 +84,7 @@ ThreadBatchDataLoader::ThreadBatchDataLoader(LoadFunc load_func,
         case io::DeviceType::kCUDAManaged:
         case io::DeviceType::kCPUShared:
         case io::DeviceType::kCUDAShared:
-            fmt::print(stderr, "Device type {} is not supported!\n", static_cast<int>(device_type));
+            fmt::print(stderr, "Device type is not supported!\n");
             break;
         }
     }
@@ -112,7 +118,7 @@ ThreadBatchDataLoader::~ThreadBatchDataLoader()
         case io::DeviceType::kCUDAManaged:
         case io::DeviceType::kCPUShared:
         case io::DeviceType::kCUDAShared:
-            fmt::print(stderr, "Device type {} is not supported!", static_cast<int>(device_type));
+            fmt::print(stderr, "Device type is not supported!");
             break;
         }
         raster_ptr = nullptr;
@@ -236,14 +242,19 @@ uint8_t* ThreadBatchDataLoader::next_data()
         break;
     case io::DeviceType::kCUDA: {
         cudaError_t cuda_status;
-        CUDA_ERROR(cudaMalloc(&raster_data_[buffer_item_head_index_], buffer_size_));
+        cuda_status = cudaMalloc(&raster_data_[buffer_item_head_index_], buffer_size_);
+        if (cuda_status != cudaSuccess) {
+            // Handle error - e.g., log error or throw exception
+            fprintf(stderr, "cudaMalloc failed: %s\n", cudaGetErrorString(cuda_status));
+            // Appropriate error handling like returning an error code or throwing exception
+        }
         break;
     }
     case io::DeviceType::kCUDAHost:
     case io::DeviceType::kCUDAManaged:
     case io::DeviceType::kCPUShared:
     case io::DeviceType::kCUDAShared:
-        fmt::print(stderr, "Device type {} is not supported!\n", static_cast<int>(device_type));
+        fmt::print(stderr, "Device type is not supported!\n");
         break;
     }
 

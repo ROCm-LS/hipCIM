@@ -30,10 +30,10 @@
 #include <fstream>
 #include <sys/stat.h>
 #include <sys/mman.h>
-#include <cuda_runtime.h>
+#include <cucim/cuda_runtime.h>
 
 #define ALIGN_UP(x, align_to) (((uint64_t)(x) + ((uint64_t)(align_to)-1)) & ~((uint64_t)(align_to)-1))
-
+/*
 #define CUDA_ERROR(stmt)                                                                                               \
     {                                                                                                                  \
         cuda_status = stmt;                                                                                            \
@@ -43,6 +43,7 @@
             REQUIRE(cudaSuccess == cuda_status);                                                                       \
         }                                                                                                              \
     }
+*/
 
 #define POSIX_ERROR(stmt)                                                                                              \
     {                                                                                                                  \
@@ -108,15 +109,15 @@ TEST_CASE("Verify libcufile usage", "[test_cufile.cpp]")
         POSIX_ERROR(posix_memalign(reinterpret_cast<void**>(&aligned_host), 512, test_count + test_buf_offset));
 
         uint8_t* unaligned_device;
-        CUDA_ERROR(cudaMalloc(&unaligned_device, test_count + test_buf_offset + BLOCK_SECTOR_SIZE));
+        cudaMalloc(&unaligned_device, test_count + test_buf_offset + BLOCK_SECTOR_SIZE);
         uint8_t* aligned_device = reinterpret_cast<uint8_t*>(ALIGN_UP(unaligned_device, BLOCK_SECTOR_SIZE));
 
         uint8_t* unaligned_device_host;
-        CUDA_ERROR(cudaMallocHost(&unaligned_device_host, test_count + test_buf_offset + BLOCK_SECTOR_SIZE));
+        cudaMallocHost(&unaligned_device_host, test_count + test_buf_offset + BLOCK_SECTOR_SIZE);
         uint8_t* aligned_device_host = reinterpret_cast<uint8_t*>(ALIGN_UP(unaligned_device_host, BLOCK_SECTOR_SIZE));
 
         uint8_t* unaligned_device_managed;
-        CUDA_ERROR(cudaMallocManaged(&unaligned_device_managed, test_count + test_buf_offset + BLOCK_SECTOR_SIZE));
+        cudaMallocManaged(&unaligned_device_managed, test_count + test_buf_offset + BLOCK_SECTOR_SIZE);
         uint8_t* aligned_device_managed =
             reinterpret_cast<uint8_t*>(ALIGN_UP(unaligned_device_managed, BLOCK_SECTOR_SIZE));
 
@@ -623,9 +624,9 @@ TEST_CASE("Verify libcufile usage", "[test_cufile.cpp]")
             }
         }
 
-        CUDA_ERROR(cudaFree(unaligned_device));
-        CUDA_ERROR(cudaFreeHost(unaligned_device_host));
-        CUDA_ERROR(cudaFree(unaligned_device_managed));
+        cudaFree(unaligned_device);
+        cudaFreeHost(unaligned_device_host);
+        cudaFree(unaligned_device_managed);
         free(aligned_host);
         free(unaligned_host);
     }

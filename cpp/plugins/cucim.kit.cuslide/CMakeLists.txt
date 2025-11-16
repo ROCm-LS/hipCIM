@@ -21,15 +21,15 @@ cmake_minimum_required(VERSION 3.30.4 FATAL_ERROR)
 
 # Set VERSION
 unset(VERSION CACHE)
-file(STRINGS ${CMAKE_CURRENT_LIST_DIR}/../../../VERSION VERSION)
+file(STRINGS ${CMAKE_CURRENT_LIST_DIR}/../../../HIPCIM_VERSION VERSION)
 # strip alpha version info
 string(REGEX REPLACE "a.*$" "" VERSION ${VERSION})
 
 # Append local cmake module path
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/modules")
 
-project(cuslide VERSION ${VERSION} DESCRIPTION "cuslide" LANGUAGES C CXX)
-set(CUCIM_PLUGIN_NAME "cucim.kit.cuslide")
+project(hipslide VERSION ${VERSION} DESCRIPTION "hipslide" LANGUAGES C CXX)
+set(CUCIM_PLUGIN_NAME "hipcim.kit.hipslide")
 
 ################################################################################
 # Include utilities
@@ -69,15 +69,17 @@ if (NOT CMAKE_RUNTIME_OUTPUT_DIRECTORY)
 endif()
 
 # Find CUDAToolkit
-find_package(CUDAToolkit REQUIRED)
+#find_package(CUDAToolkit REQUIRED)
+find_package(HIP REQUIRED)
 # For Threads::Threads
+find_package(HIP REQUIRED)
 find_package(Threads REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
 # Include CUDA headers explicitly for VSCode intelli-sense
-include_directories(AFTER SYSTEM ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+#include_directories(AFTER SYSTEM ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
 
 # Disable visibility to not expose unnecessary symbols
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
@@ -87,6 +89,7 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
 if (NOT APPLE)
     set(CMAKE_INSTALL_RPATH $ORIGIN)
 endif()
+message(CMAKE_INSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
 
 # Set Installation setup
 if (NOT CMAKE_INSTALL_PREFIX)
@@ -125,6 +128,7 @@ superbuild_depend(cli11)
 superbuild_depend(pugixml)
 superbuild_depend(json)
 superbuild_depend(libdeflate)
+find_package(rocjpeg QUIET)
 
 ################################################################################
 # Find cucim package
@@ -136,12 +140,30 @@ else()
     message("CUCIM_SDK_PATH is set to ${CUCIM_SDK_PATH}")
 endif()
 
-find_package(cucim CONFIG REQUIRED
-    HINTS ${CUCIM_SDK_PATH}/install/${CMAKE_INSTALL_LIBDIR}/cmake/cucim
+find_package(hipcim CONFIG REQUIRED
+    HINTS ${CUCIM_SDK_PATH}/install/${CMAKE_INSTALL_LIBDIR}/cmake/hipcim
           $ENV{PREFIX}/include/cmake/cucim # In case conda build is used
     )
 
+list(APPEND CMAKE_PREFIX_PATH /opt/rocm/share/rocjpeg/cmake)
+list(APPEND CMAKE_MODULE_PATH /opt/rocm/share/rocjpeg/cmake)
 
+
+find_package(rocJPEG)
+
+if(rocJPEG_FOUND)
+  message("-- ${White}${PROJECT_NAME}: rocJPEG found with find_package(rocJPEG)${ColourReset}")
+  message("-- \t${White}ROCJPEG_INCLUDE_DIR -- ${rocJPEG_INCLUDE_DIR}${ColourReset}")
+  message("-- \t${White}ROCJPEG_LIB_DIR -- ${rocJPEG_LIB_DIR}${ColourReset}")
+  message("-- \t${White}ROCJPEG_LIBRARY -- ${rocJPEG_LIBRARIES}${ColourReset}")
+  message("-- \t${White}ROCJPEG_FOUND -- ${rocJPEG_FOUND}${ColourReset}")
+  message("-- \t${White}ROCJPEG_VERSION -- ${rocJPEG_VERSION}${ColourReset}")
+  message("-- \t${White}ROCJPEG_VERSION_MAJOR -- ${rocJPEG_VERSION_MAJOR}${ColourReset}")
+  message("-- \t${White}ROCJPEG_VERSION_MINOR -- ${rocJPEG_VERSION_MINOR}${ColourReset}")
+  message("-- \t${White}ROCJPEG_VERSION_PATCH -- ${rocJPEG_VERSION_PATCH}${ColourReset}")
+else()
+  message("-- ${Yellow}${PROJECT_NAME} requires rocJPEG. Install rocJPEG before running CTests")
+endif(ROCJPEG_FOUND)
 ################################################################################
 # Define compile options
 ################################################################################
@@ -169,8 +191,8 @@ add_library(${CUCIM_PLUGIN_NAME}
     src/cuslide/jpeg2k/color_table.h
     src/cuslide/jpeg2k/libopenjpeg.cpp
     src/cuslide/jpeg2k/libopenjpeg.h
-    src/cuslide/loader/nvjpeg_processor.cpp
-    src/cuslide/loader/nvjpeg_processor.h
+    src/cuslide/loader/rocjpeg_processor.cpp
+    src/cuslide/loader/rocjpeg_processor.h
     ${deps-libopenjpeg_SOURCE_DIR}/src/bin/common/color.c  # for color_sycc_to_rgb() and color_apply_icc_profile()
     src/cuslide/lzw/lzw.cpp
     src/cuslide/lzw/lzw.h
@@ -209,13 +231,14 @@ set_target_properties(${CUCIM_PLUGIN_NAME}
 )
 target_compile_features(${CUCIM_PLUGIN_NAME} PRIVATE cxx_std_17)
 # Use generator expression to avoid `nvcc fatal   : Value '-std=c++17' is not defined for option 'Werror'`
-target_compile_options(${CUCIM_PLUGIN_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Werror -Wall -Wextra>)
+#target_compile_options(${CUCIM_PLUGIN_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Werror -Wall -Wextra>)
 
 # Link libraries
 target_link_libraries(${CUCIM_PLUGIN_NAME}
         PRIVATE
+            rocjpeg
             deps::fmt
-            cucim::cucim
+            hipcim::hipcim
             deps::libtiff
             deps::libjpeg-turbo
             deps::libopenjpeg
@@ -236,8 +259,8 @@ if (TARGET CUDA::nvjpeg_static)
 else()
         target_link_libraries(${CUCIM_PLUGIN_NAME}
             PRIVATE
-                CUDA::nvjpeg
-                CUDA::cudart
+                # CUDA::nvjpeg
+                # CUDA::cudart
         )
 endif()
 
@@ -303,8 +326,8 @@ install(EXPORT ${CUCIM_PLUGIN_NAME}-targets
 # Write package configs
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${CUCIM_PLUGIN_NAME}-config.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/cmake/${CUCIM_PLUGIN_NAME}-config.cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cucim.kit.cuslide-config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/cmake/cucim.kit.cuslide-config.cmake
     INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CUCIM_PLUGIN_NAME}
 )
 write_basic_package_version_file(

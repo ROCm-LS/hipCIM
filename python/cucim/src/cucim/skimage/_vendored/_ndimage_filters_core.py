@@ -212,9 +212,15 @@ def _call_kernel(
         output = temp
     return output
 
-
 if CUPY_GTE_13_3_0:
-    _includes = r"""
+    _includes = ""
+    if cupy.cuda.runtime.is_hip: # for hip
+        _includes = r"""
+#if HIP_VERSION_MAJOR > 6
+#include <type_traits>
+#endif
+"""
+    _includes += r"""
 #include <cupy/cuda_workaround.h>  // provide std:: coverage
 """
 else:
@@ -227,8 +233,6 @@ _ndimage_includes = (
     + r"""
 #include <cupy/math_constants.h>
 
-template<> struct std::is_floating_point<float16> : std::true_type {};
-template<> struct std::is_signed<float16> : std::true_type {};
 """
 )
 

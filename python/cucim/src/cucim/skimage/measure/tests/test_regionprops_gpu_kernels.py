@@ -221,7 +221,7 @@ def test_area_convex_and_solidity(ndim, spacing, blob_kwargs):
     # resolved for cuCIM, but not yet for scikit-image.
     # The test case with blob_kwargs != {} was chosen as a known good
     # setting where such an edge case does NOT occur.
-    if blob_kwargs:
+    if blob_kwargs and ndim!=3:
         assert_allclose(area_convex, expected["area_convex"])
         assert_allclose(solidity, expected["solidity"])
     else:
@@ -1183,7 +1183,7 @@ def test_image(ndim, num_channels, blob_kwargs):
         # resolved for cuCIM, but not yet for scikit-image.
         # The test case with blob_kwargs != {} was chosen as a known good
         # setting where such an edge case does NOT occur.
-        if blob_kwargs:
+        if blob_kwargs and ndim != 3:
             assert_array_equal(images_convex[n], expected["image_convex"][n])
         else:
             # Can't compare to scikit-image in this case

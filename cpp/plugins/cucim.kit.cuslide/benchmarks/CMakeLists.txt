@@ -38,7 +38,7 @@ target_compile_definitions(cuslide_benchmarks
 )
 target_link_libraries(cuslide_benchmarks
         PRIVATE
-            cucim::cucim
+            hipcim::hipcim
             deps::googlebenchmark
             deps::openslide
             deps::cli11

@@ -27,7 +27,7 @@ set_target_properties(cucim_benchmarks
 )
 target_compile_features(cucim_benchmarks PRIVATE ${CUCIM_REQUIRED_FEATURES})
 # Use generator expression to avoid `nvcc fatal   : Value '-std=c++17' is not defined for option 'Werror'`
-target_compile_options(cucim_benchmarks PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Werror -Wall -Wextra>)
+#target_compile_options(cucim_benchmarks PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Werror -Wall -Wextra>)
 target_compile_definitions(cucim_benchmarks
     PUBLIC
         CUCIM_VERSION=${PROJECT_VERSION}

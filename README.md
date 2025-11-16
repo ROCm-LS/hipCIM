@@ -1,112 +1,369 @@
-# <div align="left"><img src="https://rapids.ai/assets/images/rapids_logo.png" width="90px"/>&nbsp;cuCIM</div>
+# <div align="left">&nbsp;cuCIM/hipCIM&nbsp;</div>
 
-[RAPIDS](https://rapids.ai) cuCIM (pronounced "koo-sim", see [here]( https://ipa-reader.com/?text=ku%CB%90%CB%88s%C9%AAm&voice=Joey )) is an open-source, accelerated computer vision and image processing software library for multidimensional images used in biomedical, geospatial, material and life science, and remote sensing use cases.
+## hipCIM 
+hipCIM is a [HIP](https://github.com/ROCm/hip) port of the [cuCIM](https://github.com/rapidsai/cucim) library under the [RAPIDS](https://github.com/rapidsai) ecosystem.
+This library is an extensible toolkit designed to provide GPU accelerated I/O, computer vision & image processing primitives for N-Dimensional images with a focus on biomedical imaging.
 
-cuCIM offers:
+### Resources
+- [hipCIM API reference](https://rocm.docs.amd.com/projects/hipCIM/en/latest/reference/hipcim/index.html#hipcim-reference)
 
-- Enhanced Image Processing Capabilities for large and n-dimensional tag image file format (TIFF) files
-- Accelerated performance through Graphics Processing Unit (GPU)-based image processing and computer vision primitives
-- A Straightforward Pythonic Interface with Matching Application Programming Interface (API) for Openslide
+### Install hipCIM on ROCm 7.0 via AMD PyPI
 
-cuCIM supports the following formats:
+- [Optional step] Follow these if you want to install hipCIM inside a docker
+	```
+	docker pull rocm/dev-ubuntu-24.04
+	docker run --cap-add=SYS_PTRACE --ipc=host --privileged=true   \
+         --shm-size=128GB --network=host --device=/dev/kfd     \
+         --device=/dev/dri --group-add video -it               \
+         -v $HOME:$HOME  --name ${LOGNAME}_rocm                \
+     rocm/dev-ubuntu-24.04:7.0.2-complete
+	```
+- Install required system dependencies
+  	```
+    apt-get update && \
+        apt-get install -y software-properties-common lsb-release gnupg && \
+        apt-key adv --fetch-keys https://apt.kitware.com/keys/kitware-archive-latest.asc && \
+        add-apt-repository -y "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
+        mkdir -p /etc/apt/keyrings && \
+        curl -fsSL https://repo.radeon.com/rocm/rocm.gpg.key | gpg --dearmor -o /etc/apt/keyrings/rocm.gpg && \
+        echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/6.2.1/ubuntu jammy main proprietary" | tee /etc/apt/sources.list.d/amdgpu.list && \
+        apt-get update && \
+        apt-get install -y git wget gcc g++ ninja-build git-lfs \
+                      yasm libopenslide-dev python3 python3-venv \
+                      python3-dev libpython3-dev \
+                      cmake rocjpeg rocjpeg-dev rocthrust-dev \
+                      hipcub hipblas hipblas-dev hipfft hipsparse \
+                      hiprand rocsolver rocrand-dev rocm-hip-sdk
+	```
+	
+- Create a python3 virtual environment
+	```
+	python3 -m venv hipcim_build
+	source hipcim_build/bin/activate
+  ```
+    
+- Setup environment variables
+  ```
+  export ROCM_HOME=/opt/rocm
+  export AMDGPU_TARGETS=gfx942 
+	```
+- Install hipcim
+  ```
+  pip install amd-hipcim --index-url=https://pypi.amd.com/simple
+  ```
 
-- Aperio ScanScope Virtual Slide (SVS)
-- Philips TIFF
-- Generic Tiled, Multi-resolution RGB TIFF files with the following compression schemes:
-  - No Compression
-  - JPEG
-  - JPEG2000
-  - Lempel-Ziv-Welch (LZW)
-  - Deflate
+- Verify installation
+  ```
+  pip show -v amd-hipcim
+  ```
+- Expected output
+  ```
+  Name: amd-hipcim
+  Version: 25.10.0
+  Summary: hipCIM - an extensible toolkit designed to provide GPU accelerated I/O, computer vision & image processing primitives for N-Dimensional images with a focus on biomedical imaging.
+  Home-page: https://rocm.docs.amd.com/projects/hipCIM/en/latest/
+  Author: AMD Corporation
+  Author-email: 
+  License: Apache 2.0
+  Location: /scratch/integration/hipCIM/hipcim_dev/lib/python3.10/site-packages
+  Requires: amd-cupy, click, lazy-loader, numpy, scikit-image, scipy
+  Required-by: 
+  Metadata-Version: 2.4
+  Installer: pip
+  Classifiers:
+    Development Status :: 4 - Beta
+    Intended Audience :: Developers
+    Intended Audience :: Education
+    Intended Audience :: Science/Research
+    Intended Audience :: Healthcare Industry
+    Topic :: Scientific/Engineering
+    Operating System :: POSIX :: Linux
+    Environment :: Console
+    Environment :: GPU :: AMD Instinct :: MI300
+    License :: OSI Approved :: Apache Software License
+    Programming Language :: C++
+    Programming Language :: Python
+    Programming Language :: Python :: 3
+  Entry-points:
+    [console_scripts]
+    cucim = cucim.clara.cli:main
+  Project-URLs:
+    Homepage, https://rocm.docs.amd.com/projects/hipCIM/en/latest/
+    Documentation, https://rocm.docs.amd.com/projects/hipCIM/en/latest/
+    Source, https://github.com/ROCm-LS/hipCIM
+    Tracker, https://github.com/ROCm-LS/hipCIM/issues
+  ```
 
-**NOTE:** For the latest stable [README.md](https://github.com/rapidsai/cucim/blob/main/README.md) ensure you are on the `main` branch.
 
-- [GTC 2022 Accelerating Storage IO to GPUs with Magnum IO [S41347]](https://events.rainfocus.com/widget/nvidia/gtcspring2022/sessioncatalog/session/1634960000577001Etxp)
-  - cuCIM's GDS API examples: <https://github.com/NVIDIA/MagnumIO/tree/main/gds/readers/cucim-gds>
-- [SciPy 2021 cuCIM - A GPU image I/O and processing library](https://www.scipy2021.scipy.org/)
-  - [video](https://youtu.be/G46kOOM9xbQ)
-- [GTC 2021 cuCIM: A GPU Image I/O and Processing Toolkit [S32194]](https://www.nvidia.com/en-us/on-demand/search/?facet.mimetype[]=event%20session&layout=list&page=1&q=cucim&sort=date)
-  - [video](https://www.nvidia.com/en-us/on-demand/session/gtcspring21-s32194/)
+ - Run a sample program
+   ```python3
+    from cucim import CuImage
+    img = CuImage("sample_image/oxford.tif")
+    resolutions = img.resolutions
+    level_dimensions = resolutions["level_dimensions"]
+    level_count = resolutions["level_count"]
+    print(resolutions)
+    print(level_count)
+    print(level_dimensions)
+    region = img.read_region([0,0], level_dimensions[level_count - 1], level_count - 1, device="cuda")
+    print(region.device)
+   ```
 
-**[Developer Page](https://developer.nvidia.com/multidimensional-image-processing)**
+ - Output
+   ```
+    {'level_count': 1, 'level_dimensions': ((601, 81),), 'level_downsamples': (1.0,), 'level_tile_sizes': ((0, 0),)}
+    1
+    ((601, 81),)
+    [Warning] Loading image('oxford.tif') with a slow-path. The pixel format of the loaded image would be RGBA (4 channels) instead of RGB!
+    cuda
+   ```
 
-**Blogs**
-- [Enhanced Image Analysis with Multidimensional Image Processing](https://developer.nvidia.com/blog/enhanced-image-analysis-with-multidimensional-image-processing/)
-- [Accelerating Scikit-Image API with cuCIM: n-Dimensional Image Processing and IO on GPUs](https://developer.nvidia.com/blog/cucim-rapid-n-dimensional-image-processing-and-i-o-on-gpus/)
-- [Accelerating Digital Pathology Pipelines with NVIDIA Clara™ Deploy](https://developer.nvidia.com/blog/accelerating-digital-pathology-pipelines-with-nvidia-clara-deploy-2/)
 
-**Webinars**
+### Build hipCIM on ROCm 7.0 from source
+Please use the below steps to build the hipCIM library on a ROCM based MI300 system from source. 
 
-- [cuCIM: a GPU Image IO and Processing Library](https://www.youtube.com/watch?v=G46kOOM9xbQ)
+- Use the complete rocm docker image from dockerhub
+	```
+    docker pull rocm/dev-ubuntu-24.04
+    docker run --cap-add=SYS_PTRACE --ipc=host --privileged=true   \
+         --shm-size=128GB --network=host --device=/dev/kfd     \
+         --device=/dev/dri --group-add video -it               \
+         -v $HOME:$HOME  --name ${LOGNAME}_rocm                \
+     rocm/dev-ubuntu-24.04:7.0.2-complete
+    ```
 
-**[Documentation](https://docs.rapids.ai/api/cucim/stable)**
+- Install required system dependencies
+  	```
+    apt-get update && \
+        apt-get install -y software-properties-common lsb-release gnupg && \
+        apt-key adv --fetch-keys https://apt.kitware.com/keys/kitware-archive-latest.asc && \
+        add-apt-repository -y "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
+        mkdir -p /etc/apt/keyrings && \
+        curl -fsSL https://repo.radeon.com/rocm/rocm.gpg.key | gpg --dearmor -o /etc/apt/keyrings/rocm.gpg && \
+        echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/6.2.1/ubuntu jammy main proprietary" | tee /etc/apt/sources.list.d/amdgpu.list && \
+        apt-get update && \
+        apt-get install -y git wget gcc g++ ninja-build git-lfs \
+                      yasm libopenslide-dev python3 python3-venv \
+                      python3-dev libpython3-dev \
+                      cmake rocjpeg rocjpeg-dev rocthrust-dev \
+                      hipcub hipblas hipblas-dev hipfft hipsparse \
+                      hiprand rocsolver rocrand-dev rocm-hip-sdk
+	```
+	
+- Create a python3 virtual environment
+	```
+	python3 -m venv hipcim_build
+	source hipcim_build/bin/activate
+  ```
+    
+- Setup environment variables
+  ```
+  export ROCM_HOME=/opt/rocm
+  export AMDGPU_TARGETS=gfx942 
+	```
+- Install dependencies
+  ```
+  pip install --upgrade pip setuptools wheel 
+  ```
 
-**Release notes** are available on our [wiki page](https://github.com/rapidsai/cucim/wiki/Release-Notes).
+- Download the latest version of hipCIM from the git repository:
+  ```
+  git clone git@github.com:ROCm-LS/hipCIM.git
+  
+  ```
+- Install dependencies
+  ```
+  cd hipCIM
+  pip install -r ./requirements.txt
+  ```
 
-## Install cuCIM
+- Build the cpp base libraries
 
-### Conda
+   ```bash
+   ./run_amd build_local cpp release
+   ```
 
-#### [Conda (stable)](https://anaconda.org/rapidsai/cucim)
+- Build the python3 bindings
 
-```bash
-conda create -n cucim -c rapidsai -c conda-forge cucim cuda-version=`<CUDA version>`
-```
+  ```bash
+  ./run_amd build_local hipcim release
+  ```
 
-`<CUDA version>` should be 12.0+ (e.g., `12.0`, etc.)
+- Install the hipCIM python3 package
+  ```bash
+  python3 -m pip install python/cucim --index-url https://pypi.amd.com/simple
+  ```
 
-#### [Conda (nightlies)](https://anaconda.org/rapidsai-nightly/cucim)
+- Run all cpp unit tests
+  ```bash
+  ./run_amd test cpp release
+  ```
 
-```bash
-conda create -n cucim -c rapidsai-nightly -c conda-forge cucim cuda-version=`<CUDA version>`
-```
+- Run all python3 unit tests
+  ```bash
+  ./run_amd test_python
+  ```
 
-`<CUDA version>` should be 12.0+ (e.g., `12.0`, etc.)
 
-### [PyPI](https://pypi.org/project/cucim/)
+### Install hipCIM on ROCm 6.4 via AMD PyPI
 
-Install for CUDA 12:
+- [Optional step] Follow these if you want to install hipCIM inside a docker
+	```
+	docker pull rocm/dev-ubuntu-22.04
+	docker run --cap-add=SYS_PTRACE --ipc=host --privileged=true   \
+         --shm-size=128GB --network=host --device=/dev/kfd     \
+         --device=/dev/dri --group-add video -it               \
+         -v $HOME:$HOME  --name ${LOGNAME}_rocm                \
+     rocm/dev-ubuntu-22.04:6.4.1-complete
+	```
+- Install required system dependencies
+  	```
+  apt-get update && \
+      apt-get install -y software-properties-common lsb-release gnupg && \
+      apt-key adv --fetch-keys https://apt.kitware.com/keys/kitware-archive-latest.asc && \
+      add-apt-repository -y "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
+      mkdir -p /etc/apt/keyrings && \
+      curl -fsSL https://repo.radeon.com/rocm/rocm.gpg.key | gpg --dearmor -o /etc/apt/keyrings/rocm.gpg && \
+      echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/6.2.1/ubuntu jammy main proprietary" | tee /etc/apt/sources.list.d/amdgpu.list && \
+      apt-get update && \
+      apt-get install -y git wget gcc g++ ninja-build git-lfs \
+                    yasm libopenslide-dev python3 python3-venv \
+                    python3-dev libpython3-dev \
+                    cmake rocjpeg rocjpeg-dev rocthrust-dev \
+                    hipcub hipblas hipblas-dev hipfft hipsparse \
+                    hiprand rocsolver rocrand-dev rocm-hip-sdk
+	pip install --upgrade pip
+	```
+	
+- Create a python3 virtual environment
+	```
+	python3 -m venv hipcim_build
+	source hipcim_build/bin/activate
 
-```bash
-pip install cucim-cu12
-```
+  # Setup environment variables
+  
+  export ROCM_HOME=/opt/rocm
+  export AMDGPU_TARGETS=gfx942 
+	
+    
+    	# Install hipCIM
+	pip install amd-hipcim --index-url=https://pypi.amd.com/simple
+	```
 
-Install for CUDA 13:
+ - Run a sample program
+   ```python3
+    from cucim import CuImage
+    img = CuImage("sample_image/oxford.tif")
+    resolutions = img.resolutions
+    level_dimensions = resolutions["level_dimensions"]
+    level_count = resolutions["level_count"]
+    print(resolutions)
+    print(level_count)
+    print(level_dimensions)
+    region = img.read_region([0,0], level_dimensions[level_count - 1], level_count - 1, device="cuda")
+    print(region.device)
+   ```
 
-```bash
-pip install cucim-cu13
-```
+ - Output
+   ```
+    {'level_count': 1, 'level_dimensions': ((601, 81),), 'level_downsamples': (1.0,), 'level_tile_sizes': ((0, 0),)}
+    1
+    ((601, 81),)
+    [Warning] Loading image('oxford.tif') with a slow-path. The pixel format of the loaded image would be RGBA (4 channels) instead of RGB!
+    cuda
+   ```
 
-### Notebooks
 
-Please check out our [Welcome](notebooks/Welcome.ipynb) notebook ([NBViewer](https://nbviewer.org/github/rapidsai/cucim/blob/main/notebooks/Welcome.ipynb))
+### Build hipCIM on ROCm 6.4 from source
+Please use the below steps to build the hipCIM library on a ROCM based MI300 system from source. 
 
-#### Downloading sample images
+- Use the complete rocm docker image from dockerhub
+	```
+    docker pull rocm/dev-ubuntu-22.04
+    docker run --cap-add=SYS_PTRACE --ipc=host --privileged=true   \
+         --shm-size=128GB --network=host --device=/dev/kfd     \
+         --device=/dev/dri --group-add video -it               \
+         -v $HOME:$HOME  --name ${LOGNAME}_rocm                \
+     rocm/dev-ubuntu-22.04:6.4.1-complete
+    ```
 
-To download images used in the notebooks, please execute the following commands from the repository root folder to copy sample input images into `notebooks/input` folder:
+- Once you have the docker up and running, install the following packages
+  required for the build system:
+    ```
+    apt-get update && \
+        apt-get install -y software-properties-common lsb-release gnupg && \
+        apt-key adv --fetch-keys https://apt.kitware.com/keys/kitware-archive-latest.asc && \
+        add-apt-repository -y "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
+        mkdir -p /etc/apt/keyrings && \
+        curl -fsSL https://repo.radeon.com/rocm/rocm.gpg.key | gpg --dearmor -o /etc/apt/keyrings/rocm.gpg && \
+        echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/amdgpu/6.2.1/ubuntu jammy main proprietary" | tee /etc/apt/sources.list.d/amdgpu.list && \
+        apt-get update && \
+        apt-get install -y git wget gcc g++ ninja-build git-lfs \
+                      yasm libopenslide-dev python3 python3-venv \
+                      python3-dev libpython3-dev \
+                      cmake rocjpeg rocjpeg-dev rocthrust-dev \
+                      hipcub hipblas hipblas-dev hipfft hipsparse \
+                      hiprand rocsolver rocrand-dev rocm-hip-sdk
+    ```
 
-(You will need [Docker](https://www.docker.com/) installed in your system)
+- Checkout the latest version of hipCIM from git
+    ```
+    git clone git@github.com:ROCm-LS/hipCIM.git
+    cd hipCIM
+    ```
 
-```bash
-./run download_testdata
-```
-or
+- Create a python3 virtual environment and install python dependencies:
+    ```bash
+    python3 -m venv hipcim_dev
+	source hipcim_dev/bin/activate
+    
+    # Setup environment variables
+  export ROCM_HOME=/opt/rocm
+  export AMDGPU_TARGETS=gfx942 
 
-```bash
-mkdir -p notebooks/input
-tmp_id=$(docker create gigony/svs-testdata:little-big)
-docker cp $tmp_id:/input notebooks
-docker rm -v ${tmp_id}
-```
+	pip install --upgrade pip
+	pip install -r requirements.txt
+    ```
 
-## Build/Install from Source
+- Build the cpp base libraries
 
-See build [instructions](CONTRIBUTING.md#setting-up-your-build-environment).
+   ```bash
+   ./run_amd build_local cpp release
+   ```
+
+- Build the python3 bindings
+
+  ```bash
+  ./run_amd build_local hipcim release
+  ```
+
+- Install the hipCIM python3 package
+  ```bash
+  python -m pip install python/cucim --index-url https://pypi.amd.com/simple
+  ```
+
+- Run all cpp unit tests
+  ```bash
+  ./run_amd test cpp release
+  ```
+
+- Run all python3 unit tests
+  ```bash
+  ./run_amd test_python
+  ```
+
+### Code Coverage
+
+hipCIM supports comprehensive code coverage for both C++ and Python components. For detailed information about generating and understanding code coverage reports, please refer to [scripts/README.md](scripts/README.md#code-coverage).
+
+Quick commands:
+- **C++ Coverage**: `./run_amd cpp_coverage`
+- **Python Coverage**: Automatically generated with `./run_amd test_python`
 
 ## Contributing Guide
 
-Contributions to cuCIM are more than welcome!
-Please review the [CONTRIBUTING.md](https://github.com/rapidsai/cucim/blob/main/CONTRIBUTING.md) file for information on how to contribute code and issues to the project.
+Contributions to hipCIM are more than welcome!
+Please review the [CONTRIBUTING.md](https://github.com/ROCm-LS/hipCIM/CONTRIBUTING.md) file for information on how to contribute code and issues to the project.
 
 ## Acknowledgments
 
@@ -119,4 +376,4 @@ is used in this project.
 
 Apache-2.0 License (see [LICENSE](LICENSE) file).
 
-Copyright (c) 2020-2025, NVIDIA CORPORATION.
+Copyright (c) 2025, AMD CORPORATION.

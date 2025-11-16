@@ -29,21 +29,37 @@
 #include <tiffiop.h> // this is not included in the released library
 #include <turbojpeg.h>
 
+#include <cucim/cuda_runtime.h>
 #include <cucim/codec/hash_function.h>
 #include <cucim/cuimage.h>
 #include <cucim/logger/timer.h>
 #include <cucim/memory/memory_manager.h>
 #include <cucim/profiler/nvtx3.h>
-#include <cucim/util/cuda.h>
+#include <cucim/cuda_runtime.h>
+//#include <cucim/util/cuda.h>
 
 #include "cuslide/deflate/deflate.h"
 #include "cuslide/jpeg/libjpeg_turbo.h"
 #include "cuslide/jpeg2k/libopenjpeg.h"
-#include "cuslide/loader/nvjpeg_processor.h"
+
 #include "cuslide/lzw/lzw.h"
 #include "cuslide/raw/raw.h"
 #include "tiff.h"
 
+#ifndef __HIP_PLATFORM_AMD__
+#include "cuslide/loader/nvjpeg_processor.h"
+#else
+#include "cuslide/loader/rocjpeg_processor.h"
+#endif
+
+// Define conditional JPEG processor based on the platform
+namespace cuslide::loader {
+#ifdef __HIP_PLATFORM_AMD__
+    using JpegProcessor = RocJpegProcessor;
+#else // !__HIP_PLATFORM_AMD__
+    using JpegProcessor = NvJpegProcessor;
+#endif // __HIP_PLATFORM_AMD__
+} // namespace cuslide::loader
 
 namespace cuslide::tiff
 {
@@ -101,9 +117,10 @@ IFD::IFD(TIFF* tiff, uint16_t index, ifd_offset_t offset) : tiff_(tiff), ifd_ind
         uint8_t* jpegtable_data = nullptr;
         uint32_t jpegtable_count = 0;
 
-        TIFFGetField(tif, TIFFTAG_JPEGTABLES, &jpegtable_count, &jpegtable_data);
-        jpegtable_.reserve(jpegtable_count);
-        jpegtable_.insert(jpegtable_.end(), jpegtable_data, jpegtable_data + jpegtable_count);
+        if( TIFFGetField(tif, TIFFTAG_JPEGTABLES, &jpegtable_count, &jpegtable_data) ) {
+		jpegtable_.reserve(jpegtable_count);
+		jpegtable_.insert(jpegtable_.end(), jpegtable_data, jpegtable_data + jpegtable_count);
+	      }
 
         if (photometric_ == PHOTOMETRIC_RGB)
         {
@@ -250,6 +267,7 @@ bool IFD::read(const TIFF* tiff,
 
             std::unique_ptr<cucim::loader::BatchDataProcessor> batch_processor;
 
+
             // Set raster_type to CUDA because loader will handle this with nvjpeg
             if (out_device.type() == cucim::io::DeviceType::kCUDA)
             {
@@ -273,7 +291,7 @@ bool IFD::read(const TIFF* tiff,
                 const void* jpegtable_data = jpegtable.data();
                 uint32_t jpegtable_size = jpegtable.size();
 
-                auto nvjpeg_processor = std::make_unique<cuslide::loader::NvJpegProcessor>(
+                auto nvjpeg_processor = std::make_unique<cuslide::loader::JpegProcessor>(
                     tiff->file_handle_, ifd, request_location->data(), request_size->data(), location_len, batch_size,
                     maximum_tile_count, static_cast<const uint8_t*>(jpegtable_data), jpegtable_size);
 
@@ -691,6 +709,10 @@ bool IFD::read_region_tiles(const TIFF* tiff,
                         {
                         case COMPRESSION_JPEG:
                             break;
+                        case cuslide::jpeg2k::kAperioJpeg2kYCbCr:
+                            // 33003: Jpeg 2000 with YCbCr format,
+			    // possibly with a chroma subsampling
+                            break;
                         default:
                             throw std::runtime_error("Unsupported compression method");
                         }
@@ -702,10 +724,10 @@ bool IFD::read_region_tiles(const TIFF* tiff,
                         tile_data = static_cast<uint8_t*>(value->data);
 
                         cudaError_t cuda_status;
-                        CUDA_ERROR(cudaMemcpy2D(dest_start_ptr + dest_pixel_index, dest_pixel_step_y,
+                        cudaMemcpy2D(dest_start_ptr + dest_pixel_index, dest_pixel_step_y,
                                                 tile_data + nbytes_tile_index, nbytes_tw, nbytes_tile_pixel_size_x,
                                                 tile_pixel_offset_ey - tile_pixel_offset_sy + 1,
-                                                cudaMemcpyDeviceToDevice));
+                                                cudaMemcpyDeviceToDevice);
                     }
                     else
                     {
@@ -803,9 +825,9 @@ bool IFD::read_region_tiles(const TIFF* tiff,
                     else
                     {
                         cudaError_t cuda_status;
-                        CUDA_ERROR(cudaMemset2D(dest_start_ptr + dest_pixel_index, dest_pixel_step_y, background_value,
+                        cudaMemset2D(dest_start_ptr + dest_pixel_index, dest_pixel_step_y, background_value,
                                                 nbytes_tile_pixel_size_x,
-                                                tile_pixel_offset_ey - tile_pixel_offset_sy + 1));
+                                                tile_pixel_offset_ey - tile_pixel_offset_sy + 1);
                     }
                 }
             };
@@ -1052,36 +1074,36 @@ bool IFD::read_region_tiles_boundary(const TIFF* tiff,
                             // Fill original, then fill white for remaining
                             if (fill_gap_x > 0)
                             {
-                                CUDA_ERROR(cudaMemcpy2D(
+                                cudaMemcpy2D(
                                     dest_start_ptr + dest_pixel_index, dest_pixel_step_y, tile_data + nbytes_tile_index,
                                     nbytes_tw, fixed_nbytes_tile_pixel_size_x,
-                                    fixed_tile_pixel_offset_ey - tile_pixel_offset_sy + 1, cudaMemcpyDeviceToDevice));
-                                CUDA_ERROR(cudaMemset2D(dest_start_ptr + dest_pixel_index + fixed_nbytes_tile_pixel_size_x,
+                                    fixed_tile_pixel_offset_ey - tile_pixel_offset_sy + 1, cudaMemcpyDeviceToDevice);
+                                cudaMemset2D(dest_start_ptr + dest_pixel_index + fixed_nbytes_tile_pixel_size_x,
                                                         dest_pixel_step_y, background_value, fill_gap_x,
-                                                        fixed_tile_pixel_offset_ey - tile_pixel_offset_sy + 1));
+                                                        fixed_tile_pixel_offset_ey - tile_pixel_offset_sy + 1);
                                 dest_pixel_index +=
                                     dest_pixel_step_y * (fixed_tile_pixel_offset_ey - tile_pixel_offset_sy + 1);
                             }
                             else
                             {
-                                CUDA_ERROR(cudaMemcpy2D(
+                                cudaMemcpy2D(
                                     dest_start_ptr + dest_pixel_index, dest_pixel_step_y, tile_data + nbytes_tile_index,
                                     nbytes_tw, fixed_nbytes_tile_pixel_size_x,
-                                    fixed_tile_pixel_offset_ey - tile_pixel_offset_sy + 1, cudaMemcpyDeviceToDevice));
+                                    fixed_tile_pixel_offset_ey - tile_pixel_offset_sy + 1, cudaMemcpyDeviceToDevice);
                                 dest_pixel_index +=
                                     dest_pixel_step_y * (fixed_tile_pixel_offset_ey - tile_pixel_offset_sy + 1);
                             }
 
-                            CUDA_ERROR(cudaMemset2D(dest_start_ptr + dest_pixel_index, dest_pixel_step_y,
+                            cudaMemset2D(dest_start_ptr + dest_pixel_index, dest_pixel_step_y,
                                                     background_value, nbytes_tile_pixel_size_x,
-                                                    tile_pixel_offset_ey - (fixed_tile_pixel_offset_ey + 1) + 1));
+                                                    tile_pixel_offset_ey - (fixed_tile_pixel_offset_ey + 1) + 1);
                         }
                         else
                         {
-                            CUDA_ERROR(cudaMemcpy2D(dest_start_ptr + dest_pixel_index, dest_pixel_step_y,
+                            cudaMemcpy2D(dest_start_ptr + dest_pixel_index, dest_pixel_step_y,
                                                     tile_data + nbytes_tile_index, nbytes_tw, nbytes_tile_pixel_size_x,
                                                     tile_pixel_offset_ey - tile_pixel_offset_sy + 1,
-                                                    cudaMemcpyDeviceToDevice));
+                                                    cudaMemcpyDeviceToDevice);
                         }
                     }
                     else
@@ -1213,8 +1235,8 @@ bool IFD::read_region_tiles_boundary(const TIFF* tiff,
                     else
                     {
                         cudaError_t cuda_status;
-                        CUDA_ERROR(cudaMemset2D(dest_start_ptr + dest_pixel_index, dest_pixel_step_y, background_value,
-                                                nbytes_tile_pixel_size_x, tile_pixel_offset_ey - tile_pixel_offset_sy));
+                        cudaMemset2D(dest_start_ptr + dest_pixel_index, dest_pixel_step_y, background_value,
+                                                nbytes_tile_pixel_size_x, tile_pixel_offset_ey - tile_pixel_offset_sy);
                     }
                 }
             };

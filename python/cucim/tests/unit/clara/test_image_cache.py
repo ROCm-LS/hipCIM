@@ -64,7 +64,6 @@ def test_get_per_process_cache():
     assert config["memory_capacity"] == 2048
     assert not config["record_stat"]
 
-
 def test_get_shared_memory_cache():
     from cucim import CuImage
 

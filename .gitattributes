@@ -1,0 +1,10 @@
+notebooks/input/01_POS218_Z00_T00_R.tif filter=lfs diff=lfs merge=lfs -text
+notebooks/input/image.tif filter=lfs diff=lfs merge=lfs -text
+notebooks/input/image2.tif filter=lfs diff=lfs merge=lfs -text
+notebooks/input/oxford.tif filter=lfs diff=lfs merge=lfs -text
+notebooks/input/TUPAC-TR-488.svs filter=lfs diff=lfs merge=lfs -text
+notebooks/input/TUPAC-TR-467.svs filter=lfs diff=lfs merge=lfs -text
+test_data/private/generic_tiff_000.tif filter=lfs diff=lfs merge=lfs -text
+test_data/private/philips_tiff_000.tif filter=lfs diff=lfs merge=lfs -text
+test_data/generated/tiff_stripe_32x32_16.tif filter=lfs diff=lfs merge=lfs -text
+test_data/generated/tiff_stripe_4096x4096_256.tif filter=lfs diff=lfs merge=lfs -text

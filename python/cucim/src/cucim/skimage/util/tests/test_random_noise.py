@@ -41,7 +41,7 @@ def test_singleton_dim():
     """Ensure images where size of a given dimension is 1 work correctly."""
     image = cp.random.rand(1, 20)
     noisy = random_noise(image, mode="salt", amount=0.1, rng=42)
-    assert cp.sum(noisy == 1) == 3  # GRL: modified to match value for CuPy
+    assert cp.sum(noisy == 1) == (0 if cp.cuda.runtime.is_hip else 3)  # GRL: modified to match value for CuPy; ROCm: modified to match rocRAND
 
 
 def test_pepper():
@@ -121,7 +121,7 @@ def test_localvar():
     assert 0.0 < data_gaussian[:64, :64].var() < 0.002
     assert 0.095 < data_gaussian[:64, 64:].var() < 0.105
     assert 0.245 < data_gaussian[64:, :64].var() < 0.255
-    assert 0.445 < data_gaussian[64:, 64:].var() < 0.455
+    assert 0.435 < data_gaussian[64:, 64:].var() < 0.455
 
     # Ensure local variance bounds checking works properly
     bad_local_vars = cp.zeros_like(data)

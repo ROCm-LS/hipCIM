@@ -18,7 +18,7 @@
 #include <iostream>
 
 #include <catch2/catch_test_macros.hpp>
-#include <cuda_runtime.h>
+#include <cucim/cuda_runtime.h>
 #include <openslide/openslide.h>
 
 #include "config.h"

@@ -18,7 +18,7 @@
 #define CUCIM_CACHE_IMAGE_CACHE_SHARED_MEMORY_H
 
 #include "cucim/cache/image_cache.h"
-
+#include <cucim/boost_compat.h>
 #include <boost/container_hash/hash.hpp>
 #include <boost/interprocess/smart_ptr/unique_ptr.hpp>
 #include <boost/interprocess/smart_ptr/shared_ptr.hpp>

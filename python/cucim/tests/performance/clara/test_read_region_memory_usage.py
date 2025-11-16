@@ -21,7 +21,6 @@ from ...util.io import open_image_cucim
 # skip if imagecodecs package not available (needed by ImageGenerator utility)
 pytest.importorskip("imagecodecs")
 
-
 def test_read_region_cuda_memleak(testimg_tiff_stripe_4096x4096_256_jpeg):
     def get_used_gpu_memory_mib():
         """Get the used GPU memory in MiB."""

@@ -13,7 +13,9 @@
 # limitations under the License.
 #
 
-cmake_minimum_required(VERSION 3.30.4 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.26.4)
+# NOTE(HIP/AMD): make *.cu files HIP lang files
+set(CMAKE_USER_MAKE_RULES_OVERRIDE "overrides.cmake")
 
 ################################################################################
 # Prerequisite statements
@@ -21,7 +23,7 @@ cmake_minimum_required(VERSION 3.30.4 FATAL_ERROR)
 
 # Set VERSION and BUILD
 unset(VERSION CACHE)
-file(STRINGS ${CMAKE_CURRENT_LIST_DIR}/VERSION VERSION)
+file(STRINGS ${CMAKE_CURRENT_LIST_DIR}/HIPCIM_VERSION VERSION)
 # strip alpha version info
 string(REGEX REPLACE "a.*$" "" VERSION ${VERSION})
 set(PROJECT_VERSION_BUILD dev)
@@ -29,6 +31,14 @@ set(PROJECT_VERSION_BUILD dev)
 # Append local cmake module path
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cpp/cmake/modules")
 project(libcucim VERSION ${VERSION} DESCRIPTION "libcucim" LANGUAGES CXX)
+
+#enable_language(HIP)
+# Example: Echo the value of an environment variable MY_ENV_VAR
+message("The value of CMAKE_MODULE_PATH is: $ENV{CMAKE_MODULE_PATH}")
+
+find_package(HIP REQUIRED)
+enable_language(HIP)
+include_directories(${HIP_INCLUDE_DIRS})
 
 ################################################################################
 # Include utilities
@@ -60,16 +70,16 @@ if (NOT CMAKE_RUNTIME_OUTPUT_DIRECTORY)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
 endif ()
 
-find_package(CUDAToolkit REQUIRED)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
 # Include CUDA headers explicitly for VSCode intelli-sense
-include_directories(AFTER SYSTEM ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+#include_directories(AFTER SYSTEM ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+include_directories(AFTER SYSTEM /opt/rocm/include)
 
 # Disable visibility to not expose unnecessary symbols
-set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
+set(CMAKE_CXX_VISIBILITY_PRESET default)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN NO)
 
 # Set RPATH
 if (NOT APPLE)
@@ -91,10 +101,64 @@ include(ExternalProject)
 ################################################################################
 # Options
 ################################################################################
-option(CUCIM_SUPPORT_GDS "Support cufile library" ON)
+
+# Code Coverage Option
+option(ENABLE_CODE_COVERAGE "Enable code coverage instrumentation" OFF)
+
+if(ENABLE_CODE_COVERAGE)
+    message(STATUS "Code coverage enabled")
+
+    # Determine which compiler is being used
+    # For hipcc, we need to check the actual compiler path
+    set(COVERAGE_CXX_FLAGS "")
+    set(COVERAGE_C_FLAGS "")
+
+    # Check C++ compiler
+    if(CMAKE_CXX_COMPILER MATCHES "hipcc" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        # LLVM/Clang coverage flags for C++
+        set(COVERAGE_CXX_FLAGS "-fprofile-instr-generate -fcoverage-mapping -g")
+        message(STATUS "Using LLVM coverage flags for C++ (hipcc/clang)")
+    elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+        # GCC coverage flags for C++
+        set(COVERAGE_CXX_FLAGS "-fprofile-arcs -ftest-coverage -g")
+        message(STATUS "Using GCC coverage flags for C++")
+    endif()
+
+    # Check C compiler separately - it might be different
+    if(CMAKE_C_COMPILER MATCHES "hipcc" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+        # LLVM/Clang coverage flags for C
+        set(COVERAGE_C_FLAGS "-fprofile-instr-generate -fcoverage-mapping -g")
+        message(STATUS "Using LLVM coverage flags for C (hipcc/clang)")
+    elseif(CMAKE_C_COMPILER_ID MATCHES "GNU" OR CMAKE_C_COMPILER MATCHES "gcc" OR CMAKE_C_COMPILER MATCHES "cc")
+        # GCC coverage flags for C
+        set(COVERAGE_C_FLAGS "-fprofile-arcs -ftest-coverage -g")
+        message(STATUS "Using GCC coverage flags for C")
+    endif()
+
+    # Apply the flags
+    if(COVERAGE_CXX_FLAGS)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COVERAGE_CXX_FLAGS}")
+        set(CMAKE_HIP_FLAGS "${CMAKE_HIP_FLAGS} ${COVERAGE_CXX_FLAGS}")
+    endif()
+
+    if(COVERAGE_C_FLAGS)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COVERAGE_C_FLAGS}")
+    endif()
+
+    # Export compile commands for verification
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+    message(STATUS "Coverage C++ flags: ${COVERAGE_CXX_FLAGS}")
+    message(STATUS "Coverage C flags: ${COVERAGE_C_FLAGS}")
+endif()
+
+################################################################################
+# Options
+################################################################################
+option(CUCIM_SUPPORT_GDS "Support cufile library" OFF)
 option(CUCIM_STATIC_GDS "Use static cufile library" OFF)
 option(CUCIM_SUPPORT_CUDA "Support CUDA" ON)
-option(CUCIM_SUPPORT_NVTX "Support NVTX" ON)
+option(CUCIM_SUPPORT_NVTX "Support NVTX" OFF)
 
 # Setup CXX11 ABI
 # : Adds CXX11 ABI definition to the compiler command line for targets in the current directory,
@@ -130,7 +194,7 @@ superbuild_depend(taskflow)
 ################################################################################
 # Define some names
 ################################################################################
-set(CUCIM_PACKAGE_NAME cucim) # cucim
+set(CUCIM_PACKAGE_NAME hipcim) # hipcim
 
 ################################################################################
 # Add subdirectories
@@ -155,6 +219,9 @@ set(INSTALL_TARGETS
         ${CUCIM_PACKAGE_NAME}
         fmt-header-only
         cucim_benchmarks
+        cucim_primitives_benchmarks
+	cucim_tests
+	tiff_image
         )
 
 install(TARGETS ${INSTALL_TARGETS}
@@ -202,7 +269,9 @@ install(DIRECTORY
 # Copy 3rdparty headers
 install(DIRECTORY
             ${deps-fmt_SOURCE_DIR}/include/
-            ${deps-nvtx3_SOURCE_DIR}/c/include/
+            #${deps-nvtx3_SOURCE_DIR}/c/include/
+	    #${deps-nvtx3_SOURCE_DIR}/cpp/include/ --> There is no cpp folder in nvtx
+	    ${CMAKE_CURRENT_SOURCE_DIR}/cpp/include/cucim/3rdparty/
         DESTINATION
             ${CMAKE_INSTALL_INCLUDEDIR}/${CUCIM_PACKAGE_NAME}/3rdparty)
 

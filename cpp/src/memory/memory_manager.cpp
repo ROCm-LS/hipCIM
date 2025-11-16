@@ -20,7 +20,7 @@
 
 #include <memory_resource>
 
-#include <cuda_runtime.h>
+#include <cucim/cuda_runtime.h>
 #include <fmt/format.h>
 
 #include "cucim/io/device_type.h"
@@ -72,6 +72,12 @@ void get_pointer_attributes(PointerAttributes& attr, const void* ptr)
         attr.device = cucim::io::Device(cucim::io::DeviceType::kCUDAManaged, attributes.device);
         attr.ptr = attributes.devicePointer;
         break;
+    case hipMemoryTypeArray:
+        // Not handling this case yet
+        break;
+    case hipMemoryTypeUnified:
+        // Not handling this case yet
+        break;
     }
 }
 
@@ -118,7 +124,7 @@ CUCIM_API bool move_raster_from_device(void** target, size_t size, const cucim::
         {
             throw std::bad_alloc();
         }
-        cudaFree(cuda_mem);
+        CUDA_TRY(cudaFree(cuda_mem));
         *target = host_mem;
         break;
     }

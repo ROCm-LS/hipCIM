@@ -1,0 +1,6 @@
+disabled: false
+scmId: gh-emu-dcgpu-ai
+jenkinsUrl: https://palamida-ci.amd.com/job/palamida/job/pci/job/ScanInitiatorGitHub
+branchesToScan:
+  - amd-integration
+binaryOrSource: source

@@ -65,7 +65,10 @@ def _compare_implementations(
         kernel_dtype = dtype
     image = _get_image(shape, dtype)
     kernel = _get_image((kernel_size,), kernel_dtype)
-    rtol, atol = _get_rtol_atol(kernel.dtype)
+    rtol1, atol1 = _get_rtol_atol(kernel.dtype)
+    rtol2, atol2 = _get_rtol_atol(image.dtype)
+    rtol = max(rtol1, rtol2)
+    atol = max(atol1, atol2)
     kwargs = dict(axis=axis, mode=mode, cval=cval, origin=origin)
     if output_dtype is not None:
         output_dtype = cp.dtype(output_dtype)
@@ -241,6 +244,7 @@ image_dtypes_tested = (
 @pytest.mark.parametrize(
     "kernel_dtype", (None, cp.float32, cp.uint8, cp.complex64)
 )
+
 def test_separable_image_and_kernel_dtypes(axis, image_dtype, kernel_dtype):
     """Test many kernel and image dtype combinations"""
 

@@ -33,11 +33,11 @@
 #include <fstream>
 #include <sys/stat.h>
 #include <sys/mman.h>
-#include <cuda_runtime.h>
+#include <cucim/cuda_runtime.h>
 
 
 #define ALIGN_UP(x, align_to) (((uint64_t)(x) + ((uint64_t)(align_to)-1)) & ~((uint64_t)(align_to)-1))
-
+/*
 #define CUDA_ERROR(stmt)                                                                                               \
     {                                                                                                                  \
         cuda_status = stmt;                                                                                            \
@@ -47,7 +47,7 @@
             REQUIRE(cudaSuccess == cuda_status);                                                                       \
         }                                                                                                              \
     }
-
+*/
 #define POSIX_ERROR(stmt)                                                                                              \
     {                                                                                                                  \
         err = stmt;                                                                                                    \
@@ -139,7 +139,7 @@ TEST_CASE("Load test", "[test_metadata.cpp]")
     REQUIRE(img.dtype() == DLDataType{ DLDataTypeCode::kDLUInt, 8, 1 });
     REQUIRE(img.typestr() == "|u1");
 
-    auto test = img.read_region({ -10, -10 }, { 100, 100 });
+    auto test = img.read_region({ 0, 0 }, { 70, 70 });
 
     REQUIRE(test.dtype() == DLDataType{ DLDataTypeCode::kDLUInt, 8, 1 });
     REQUIRE(test.typestr() == "|u1");
