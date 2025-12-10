@@ -8,7 +8,7 @@
 Supported features and limitations
 ***********************************
 
-This topic discusses the features and limitations for hipCIM.
+This topic summarizes the hipCIM features and limitations.
 
 Features
 ---------
@@ -56,9 +56,9 @@ Image support
 
 hipCIM supports the following image formats:
 
-- Single level Aperio ScanScope Virtual Slide (SVS) with JPEG compression
+- Single-level Aperio ScanScope Virtual Slide (SVS) with JPEG compression
 
-- Single level Philips TIFF with JPEG compression
+- Single-level Philips TIFF with JPEG compression
 
 Note that the image support is limited by `rocJPEG chroma subsampling and hardware capabilities <https://rocm.docs.amd.com/projects/rocJPEG/en/latest/reference/rocjpeg-formats-and-architectures.html>`_.
 
@@ -66,8 +66,6 @@ hipCIM API mirrors `scikit-image <https://scikit-image.org/>`_ for image manipul
 
 Limitations
 ------------
-
-- Support for multilevel TIFF images is under development.
 
 - No Support for JPEG2K compression.
 
@@ -77,11 +75,11 @@ Limitations
 
 - No support for the following image processing operations:
 
-  - affine, similarity, euclidean , threshold_niblack , threshold_sauvola, convex_hull_image ,corner_fast ,denoise_bilateral, denoise_wavelet, wiener, richardson_lucy, unsupervised_wiener, estimate_sigma, random_walker, felzenszwalb,slic, quickshift, watershed, active_contour and all exposure operations.
+  - affine, similarity, euclidean, threshold_niblack, threshold_sauvola, convex_hull_image, corner_fast denoise_bilateral, denoise_wavelet, wiener, richardson_lucy, unsupervised_wiener, estimate_sigma, random_walker, felzenszwalb,slic, quickshift, watershed, active_contour, and all exposure operations.
 
 - Registration:
 
-  - All registration functions (optical flow and demons) are GPU-accelerated but typically lack CPU fallbacks.
+  - All registration functions (optical flow and daemons) are GPU-accelerated but typically lack CPU fallbacks.
 
 - Clara DL pipeline:
 
@@ -91,4 +89,4 @@ Limitations
 
 - Backend differences:
 
-  - As with any cross-backend port, subtle differences can appear in performance or numerical behavior. You are advised to validate results for mission-critical steps and report reproducible issues.
+  - As hipCIM is an AMD ROCm port of cuCIM, it might differ from cuCIM in performance or numerical behavior. Validate results for mission-critical steps and `report reproducible issues <https://github.com/ROCm-LS/ROCm-LS-Docs/issues/new>`_.

@@ -40,6 +40,7 @@ Doxygen Settings
 Ensure Doxyfile is located at docs/doxygen.
 If the component does not need doxygen, delete this section for optimal build time
 '''
+
 doxygen_root = "doxygen"
 doxysphinx_enabled = True
 doxygen_project = {

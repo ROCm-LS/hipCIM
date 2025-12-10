@@ -10,20 +10,20 @@ Installing hipCIM
 
 This topic discusses how to install hipCIM using the following options:
 
-- :ref:`AMD PyPI (for users) <install-package>`
-
 - :ref:`Build from source (for developers) <source-build>`
+
+- :ref:`Recommended: AMD PyPI (for users) <install-package>`
 
 System requirements
 ********************
 
-+--------------+----------------+----------------+-----------+
-| ROCm version | Ubuntu version | Python version | AMD GPU   |
-+==============+================+================+===========+
-| 7.0          | 24.04          | 3.12           |           |
-+--------------+----------------+----------------+ MI300X    |
-| 6.4          | 22.04          | 3.10           |           |
-+--------------+----------------+----------------+-----------+
++--------------+----------------+----------------+------------------+
+| ROCm version | Ubuntu version | Python version | AMD Instinct GPU |
++==============+================+================+==================+
+| 7.0.2        | 24.04          | 3.12           | MI300A           |
++--------------+----------------+----------------+------------------+
+| 6.4.3        | 22.04          | 3.10           | MI325X           |
++--------------+----------------+----------------+------------------+
 
 Setting up the environment
 ***************************
@@ -32,33 +32,29 @@ To set up the environment for installing hipCIM, follow these steps:
 
 1. Optional: Use ROCm Docker to get started.
 
-   - For ROCm 6.4, run:
+   - For ROCm 7.0.2, run:
 
      .. code-block:: shell
 
-      docker pull rocm/dev-ubuntu-22.04-complete
-
       docker run --cap-add=SYS_PTRACE --ipc=host --privileged=true   \
-            --shm-size=128GB --network=host --device=/dev/kfd     \
-            --device=/dev/dri --group-add video -it               \
-            -v $HOME:$HOME  --name ${LOGNAME}_rocm                \
-                                             rocm/dev-ubuntu-22.04:6.4.1-complete
+      --shm-size=128GB --network=host --device=/dev/kfd     \
+      --device=/dev/dri --group-add video -it               \
+      -v $HOME:$HOME  --name ${LOGNAME}_rocm                \
+                                       rocm/dev-ubuntu-24.04:7.0.2-complete
 
-   - For ROCm 7.0, run:
+   - For ROCm 6.4.3, run:
 
      .. code-block:: shell
 
-      docker pull rocm/dev-ubuntu-24.04:7.0.2-complete
-
       docker run --cap-add=SYS_PTRACE --ipc=host --privileged=true   \
-         --shm-size=128GB --network=host --device=/dev/kfd     \
-         --device=/dev/dri --group-add video -it               \
-         -v $HOME:$HOME  --name ${LOGNAME}_rocm                \
-                                          rocm/dev-ubuntu-24.04:7.0.2-complete
+      --shm-size=128GB --network=host --device=/dev/kfd     \
+      --device=/dev/dri --group-add video -it               \
+      -v $HOME:$HOME  --name ${LOGNAME}_rocm                \
+                                       rocm/dev-ubuntu-22.04:6.4.3-complete
 
    For bare metal, skip this step.
 
-2. Install system dependencies. For both ROCm 6.4 and 7.0, run:
+2. Install system dependencies. For both ROCm 6.4.3 and 7.0.2, run:
 
    .. code-block:: shell
 
@@ -96,7 +92,7 @@ To set up the environment for installing hipCIM, follow these steps:
 Building hipCIM from source
 ****************************
 
-To build hipCIM from source, follow the steps given in this section. This installation method should be used by hipCIM developers. hipCIM users should use the :ref:`install-package`
+To build hipCIM from source, follow the steps given in this section. hipCIM developers should use this installation method. hipCIM users should use the :ref:`Installing hipCIM using AMD PyPI <install-package>`
 
 1. Install dependencies.
 
@@ -137,7 +133,11 @@ To build hipCIM from source, follow the steps given in this section. This instal
 
       .. code-block:: shell
 
-         python -m pip install python/cucim --extra-index-url https://pypi.amd.com/simple
+         # For ROCm 7.0.2
+         python3 -m pip install python/cucim --extra-index-url https://pypi.amd.com/rocm-7.0.2/simple/
+
+         # For ROCm 6.4.3
+         python3 -m pip install python/cucim --extra-index-url https://pypi.amd.com/simple
 
 6. Verify the installation.
 
@@ -160,13 +160,22 @@ To build hipCIM from source, follow the steps given in this section. This instal
 Installing hipCIM using AMD PyPI (recommended)
 ***********************************************
 
-Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <https://pypi.amd.com/simple/>`_. This section discusses how to install hipCIM using this package index. This installation method should be used by hipCIM users. hipCIM developers should use the :ref:`source-build`.
+Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <https://pypi.amd.com/simple/>`_. This section discusses how to install hipCIM using this package index. hipCIM users should use this installation method. hipCIM developers should use the :ref:`source-build`.
 
 1. Install hipCIM.
 
-   .. code-block:: shell
+   - For ROCm 7.0.2, run:
 
-      pip install amd-hipcim --index-url=https://pypi.amd.com/simple
+     .. code-block:: shell
+
+      pip install amd-hipcim --extra-index-url=https://pypi.amd.com/rocm-7.0.2/simple/
+
+   - For ROCm 6.4.3, run:
+
+     .. code-block:: shell
+
+      pip install amd-cupy --extra-index-url=https://pypi.amd.com/simple
+      pip install amd-hipcim --extra-index-url=https://pypi.amd.com/rocm-6.4.3/simple
 
 2. Verify the installation.
 
@@ -216,7 +225,7 @@ Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <
 Getting started
 ****************
 
-Here is a sample program and its expected output to help you get started.
+Here is a sample Python code and its expected output to help you get started.
 
 - Sample code:
 
@@ -243,5 +252,5 @@ Here is a sample program and its expected output to help you get started.
    {'level_count': 1, 'level_dimensions': ((601, 81),), 'level_downsamples': (1.0,), 'level_tile_sizes': ((0, 0),)}
    1
    ((601, 81),)
-   [Warning] Loading image('oxford.tif') with a slow-path. The pixel format of the loaded image would be RGBA (4 channels) instead of RGB!
+   [Warning] Loading image('sample_image/oxford.tif') with a slow-path. The pixel format of the loaded image would be RGBA (4 channels) instead of RGB!
    cuda

@@ -169,5 +169,8 @@ conda-bld
 tags
 hipcim_dev
 /_build
-/docs/_doxygen
-/docs/doxygen
+
+# Doxygen files
+docs/doxygen/html
+docs/doxygen/xml
+docs/_doxygen
