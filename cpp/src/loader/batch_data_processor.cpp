@@ -17,7 +17,7 @@
 
 #include "cucim/loader/batch_data_processor.h"
 
-#include <cuda_runtime.h>
+#include <cucim/cuda_runtime.h>
 #include <fmt/format.h>
 
 #include "cucim/cache/image_cache_manager.h"

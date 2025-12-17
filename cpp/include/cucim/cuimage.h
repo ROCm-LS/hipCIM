@@ -273,8 +273,8 @@ private:
     uint64_t total_batch_count_ = 0;
 };
 
-template class CuImageIterator<CuImage>;
-template class CuImageIterator<const CuImage>;
+//template class CuImageIterator<CuImage>;
+//template class CuImageIterator<const CuImage>;
 
 } // namespace cucim
 

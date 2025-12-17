@@ -334,6 +334,7 @@ def test_piecewise_affine():
 
 
 @pytest.mark.parametrize("xp", [np, cp])
+@pytest.mark.skip(reason="Known issue with Cupy. See GPUAI-5703 for more details")
 def test_fundamental_matrix_estimation(xp):
     # fmt: off
     src = xp.array([1.839035, 1.924743, 0.543582,  0.375221,  # noqa
@@ -413,6 +414,7 @@ def test_essential_matrix_init(xp):
 
 
 @pytest.mark.parametrize("xp", [np, cp])
+@pytest.mark.skip(reason="Known issue with Cupy. See GPUAI-5703 for more details")
 def test_essential_matrix_estimation(xp):
     # fmt: off
     src = xp.array([1.839035, 1.924743, 0.543582,  0.375221,  # noqa

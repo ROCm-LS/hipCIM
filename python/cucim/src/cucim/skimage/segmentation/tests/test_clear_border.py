@@ -2,6 +2,7 @@ import cupy as cp
 from cupy.testing import assert_array_equal
 
 from cucim.skimage.segmentation import clear_border
+import pytest
 
 
 def test_clear_border():

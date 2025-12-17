@@ -32,8 +32,8 @@ struct EXPORT_VISIBLE PluginConfig
 {
     void load_config(const void* json_obj);
 
-    std::vector<std::string> plugin_names{ std::string("cucim.kit.cuslide@" XSTR(CUCIM_VERSION) ".so"),
-                                           std::string("cucim.kit.cumed@" XSTR(CUCIM_VERSION) ".so") };
+    std::vector<std::string> plugin_names{ std::string("hipcim.kit.hipslide@" XSTR(CUCIM_VERSION) ".so"),
+                                           std::string("hipcim.kit.hipmed@" XSTR(CUCIM_VERSION) ".so") };
 };
 
 #undef STR

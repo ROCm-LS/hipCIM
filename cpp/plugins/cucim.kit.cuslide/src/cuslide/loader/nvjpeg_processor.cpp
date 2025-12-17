@@ -41,7 +41,7 @@ NvJpegProcessor::NvJpegProcessor(CuCIMFileHandle* file_handle,
                                  uint32_t maximum_tile_count,
                                  const uint8_t* jpegtable_data,
                                  const uint32_t jpegtable_size)
-    : cucim::loader::BatchDataProcessor(batch_size), file_handle_(file_handle), ifd_(ifd)
+    : cucim::loader::BatchDataProcessor(batch_size), file_handle_(file_handle_), ifd_(ifd)
 {
     if (maximum_tile_count > 1)
     {

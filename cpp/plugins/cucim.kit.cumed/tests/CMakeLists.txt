@@ -44,7 +44,7 @@ target_compile_definitions(cumed_tests
 )
 target_link_libraries(cumed_tests
         PRIVATE
-            cucim::cucim
+            hipcim::hipcim
             ${CUCIM_PLUGIN_NAME}
             deps::catch2
             deps::cli11

@@ -37,7 +37,7 @@ target_compile_definitions(cumed_benchmarks
 )
 target_link_libraries(cumed_benchmarks
         PRIVATE
-            cucim::cucim
+            hipcim::hipcim
             deps::googlebenchmark
             deps::cli11
         )

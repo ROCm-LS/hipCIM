@@ -32,7 +32,6 @@ repos:
     rev: v0.4.0
     hooks:
       - id: verify-alpha-spec
-        args: ["--fix", "--mode=release"]
   - repo: https://github.com/rapidsai/dependency-file-generator
     rev: v1.16.0
     hooks:

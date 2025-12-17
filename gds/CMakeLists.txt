@@ -18,6 +18,10 @@ cucim_set_build_shared_libs(OFF)
 # Disable visibility to not expose unnecessary symbols
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
+find_package(HIP REQUIRED)
+enable_language(HIP)
+include_directories(${HIP_INCLUDE_DIRS})
+set(FMT_INCLUDE_DIR "${CMAKE_BINARY_DIR}/_deps/deps-fmt-src/include")
 
 # Set RPATH
 if (NOT APPLE)
@@ -29,6 +33,7 @@ endif ()
 ################################################################################
 add_library(cufile_stub
         include/cufile_stub.h
+        include/cufile_amd.h
         src/cufile_stub.cpp
         )
 
@@ -41,6 +46,7 @@ set_target_properties(cufile_stub
         # To prevent the error message: /usr/bin/ld: ../lib/libcufile_stub.a(cufile_stub.cpp.o): relocation R_X86_64_PC32 against symbol `__fatbinwrap_46_tmpxft_00005869_00000000_6_cufile_stub_cpp1_ii_1e2ddd49' can not be used when making a shared object; recompile with -fPIC
         POSITION_INDEPENDENT_CODE ON
 )
+target_compile_definitions(cufile_stub PRIVATE __HIP_PLATFORM_AMD__)
 
 # Note: Looks like the following line causes error on CMake 3.18.4 (it is working on 3.18.2). Keeping it for now.
 set(CUCIM_REQUIRED_FEATURES cxx_std_17)
@@ -56,19 +62,20 @@ target_link_libraries(cufile_stub
         PUBLIC
             ${CMAKE_DL_LIBS}
         PRIVATE
-            CUDA::cudart
         )
 
 # Set GDS include path (cufile.h)
-if (DEFINED ENV{CONDA_BUILD} AND EXISTS $ENV{PREFIX}/include/cufile.h)
-    set(GDS_INCLUDE_PATH "$ENV{PREFIX}/include")
-elseif (DEFINED ENV{CONDA_PREFIX} AND EXISTS $ENV{CONDA_PREFIX}/include/cufile.h)
-    set(GDS_INCLUDE_PATH "$ENV{CONDA_PREFIX}/include")
-elseif (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../temp/cuda/include/cufile.h)
-    set(GDS_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../temp/cuda/include)
-else ()
-    set(GDS_INCLUDE_PATH /usr/local/cuda/include)
-endif ()
+#if (DEFINED ENV{CONDA_BUILD} AND EXISTS $ENV{PREFIX}/include/cufile.h)
+#    set(GDS_INCLUDE_PATH "$ENV{PREFIX}/include")
+#elseif (DEFINED ENV{CONDA_PREFIX} AND EXISTS $ENV{CONDA_PREFIX}/include/cufile.h)
+#    set(GDS_INCLUDE_PATH "$ENV{CONDA_PREFIX}/include")
+#elseif (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../temp/cuda/include/cufile.h)
+#    set(GDS_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../temp/cuda/include)
+#else ()
+#   set(GDS_INCLUDE_PATH /usr/local/cuda/include)
+#endif ()
+
+set(GDS_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 message("Set GDS_INCLUDE_PATH to '${GDS_INCLUDE_PATH}'.")
 
@@ -103,14 +110,15 @@ endif()
 
 target_compile_definitions(cufile_stub
 PUBLIC
-    CUCIM_SUPPORT_GDS=$<BOOL:${CUCIM_SUPPORT_GDS}>
-    CUCIM_STATIC_GDS=$<BOOL:${CUCIM_STATIC_GDS}>
+    CUCIM_SUPPORT_GDS=0#$<BOOL:${CUCIM_SUPPORT_GDS}>
+    CUCIM_STATIC_GDS=0#$<BOOL:${CUCIM_STATIC_GDS}>
 )
 
 target_include_directories(cufile_stub
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
         $<BUILD_INTERFACE:${GDS_INCLUDE_PATH}>
+        ${FMT_INCLUDE_DIR}
     PRIVATE
         # Add path to cufile.h explicitly. ${TOP}/temp/cuda would be available by `./run copy_gds_files_`
         ${CMAKE_CURRENT_SOURCE_DIR}/../cpp/include # for including helper.h in cucim/dynlib

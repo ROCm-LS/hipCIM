@@ -227,8 +227,6 @@ _ndimage_includes = (
     + r"""
 #include <cupy/math_constants.h>
 
-template<> struct std::is_floating_point<float16> : std::true_type {};
-template<> struct std::is_signed<float16> : std::true_type {};
 """
 )
 

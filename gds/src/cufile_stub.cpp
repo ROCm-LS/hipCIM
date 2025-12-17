@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+
+#include <cucim/cuda_runtime.h>
+
 #include "cufile_stub.h"
 #include "cucim/dynlib/helper.h"
 #include "cucim/util/platform.h"
