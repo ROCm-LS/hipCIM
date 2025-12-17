@@ -84,7 +84,14 @@ public:
     DLTContainer(DLTensor* handle, char* shm_name = nullptr) : tensor_(handle), shm_name_(shm_name)
     {
     }
-
+    // Constructor that takes a container pointer and shm_name  
+    DLTContainer(DLTensor* container, const std::string& shm_name) {  
+        // Implementation here  
+    }
+    // Constructor that takes nullptr (for returning null containers)  
+    explicit DLTContainer(std::nullptr_t) {  
+        // Implementation to create a null/empty container  
+    } 
     /**
      * @brief Return the size of memory required to store the contents of data.
      *
@@ -121,6 +128,17 @@ public:
             return "";
         }
         return to_numpy_dtype(tensor_->dtype);
+    }
+
+    /**
+     * @brief Return the shared memory name of the container
+     *
+     * Note: This forces use of the private variable, to suppress compiler diagnostics
+     *
+     * @return A character pointer that represents the name of the container
+     */
+    char* shm_name() const {
+        return shm_name_;
     }
 
     operator bool() const

@@ -1,0 +1,7 @@
+albumentations
+importlib
+pillow
+plotly
+pyvips
+streamlit
+#voila

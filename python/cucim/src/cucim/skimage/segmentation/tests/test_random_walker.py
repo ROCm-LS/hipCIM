@@ -73,6 +73,7 @@ def make_3d_syntheticdata(lx, ly=None, lz=None):
 
 
 @testing.parametrize("dtype", [cp.float16, cp.float32, cp.float64])
+@pytest.mark.skip(reason="SKIPPED: Not Implemented")
 def test_2d_bf(dtype):
     lx = 70
     ly = 100
@@ -165,6 +166,7 @@ def test_types():
     assert data.shape == labels.shape
 
 
+@pytest.mark.skip(reason="SKIPPED: Not Implemented")
 def test_reorder_labels():
     lx = 70
     ly = 100

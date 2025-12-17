@@ -17,7 +17,6 @@ if (NOT TARGET deps::fmt)
     FetchContent_Declare(
             deps-fmt
             GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-            GIT_TAG 10.1.1
             GIT_SHALLOW TRUE
             EXCLUDE_FROM_ALL
     )

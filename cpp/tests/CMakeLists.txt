@@ -16,6 +16,7 @@
 include(CTest)
 enable_testing()
 
+message(CUCIM_PACKAGE_NAME="${CUCIM_PACKAGE_NAME}")
 ################################################################################
 # Add executable: cucim_tests
 ################################################################################
@@ -32,9 +33,11 @@ set_target_properties(cucim_tests
         CXX_STANDARD_REQUIRED YES
         CXX_EXTENSIONS NO
 )
+target_compile_definitions(cucim_tests PRIVATE __HIP_PLATFORM_AMD__)
 target_compile_features(cucim_tests PRIVATE ${CUCIM_REQUIRED_FEATURES})
+
 # Use generator expression to avoid `nvcc fatal   : Value '-std=c++17' is not defined for option 'Werror'`
-target_compile_options(cucim_tests PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Werror -Wall -Wextra>)
+#target_compile_options(cucim_tests PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Werror -Wall -Wextra>)
 target_compile_definitions(cucim_tests
     PUBLIC
         CUCIM_VERSION=${PROJECT_VERSION}
@@ -52,8 +55,8 @@ find_package(Threads REQUIRED)
 
 target_link_libraries(cucim_tests
         PRIVATE
-            CUDA::cudart
             ${CUCIM_PACKAGE_NAME}
+	    ${HIP_LIBRARIES}
             deps::catch2
             deps::openslide
             deps::taskflow

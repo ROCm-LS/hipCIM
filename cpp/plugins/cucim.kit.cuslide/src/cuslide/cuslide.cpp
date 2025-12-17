@@ -35,7 +35,7 @@
 using json = nlohmann::json;
 
 const struct cucim::PluginImplDesc kPluginImpl = {
-    "cucim.kit.cuslide", // name
+    "hipcim.kit.hipslide", // name
     { 0, 1, 0 }, // version
     "dev", // build
     "clara team", // author

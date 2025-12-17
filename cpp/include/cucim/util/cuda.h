@@ -19,12 +19,12 @@
 
 
 #if CUCIM_SUPPORT_CUDA
-#    include <cuda_runtime.h>
+#    include <cucim/cuda_runtime.h>
 #endif
 
 #define CUDA_TRY(stmt)                                                                                                 \
     {                                                                                                                  \
-        cuda_status = stmt;                                                                                            \
+        cuda_status = stmt;                                                                                \
         if (cudaSuccess != cuda_status)                                                                                \
         {                                                                                                              \
             fmt::print(stderr, "[Error] CUDA Runtime call {} in line {} of file {} failed with '{}' ({}).\n", #stmt,   \
@@ -34,7 +34,7 @@
 
 #define CUDA_ERROR(stmt)                                                                                               \
     {                                                                                                                  \
-        cuda_status = stmt;                                                                                            \
+        cudaError_t cuda_status = stmt;                                                                                \
         if (cudaSuccess != cuda_status)                                                                                \
         {                                                                                                              \
             throw std::runtime_error(                                                                                  \

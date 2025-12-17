@@ -1,6 +1,6 @@
-cuCIM is licensed under the terms of the Apache-2.0 License.
+hipCIM is licensed under the terms of the Apache-2.0 License.
 
-However, cuCIM utilizes third-party software from various sources.
+However, hipCIM utilizes third-party software from various sources.
 Portions of this software are copyrighted by their respective owners as indicated in the copyright
 notices below.
 
@@ -85,11 +85,6 @@ DLPack
   - https://github.com/dmlc/dlpack/blob/main/LICENSE
 - Copyright: DLPack Contributors
 
-NVIDIA CUDA TOOLKIT (including libcufile/libnvjpeg)
-- License: NVIDIA License
-  - https://docs.nvidia.com/cuda/pdf/EULA.pdf
-- Copyright: NVIDIA Corporation
-
 RAPIDS RMM
 - License: Apache-2.0 License
   - https://github.com/rapidsai/rmm/blob/branch-0.17/LICENSE
@@ -112,15 +107,10 @@ OpenJPEG
   - cpp/plugins/cucim.kit.cuslide/src/cuslide/jpeg2k/libopenjpeg.cpp : Implementation of jpeg2k decoder.
   - cpp/plugins/cucim.kit.cuslide/src/cuslide/jpeg2k/color_conversion.cpp : Implementation of color conversion methods.
 
-NVIDIA nvJPEG
-- License: NVIDIA License
-  - https://developer.download.nvidia.com/compute/redist/libnvjpeg/EULA-nvjpeg.txt
-- Copyright: NVIDIA Corporation
-
-NVIDIA nvJPEG2000
-- License: NVIDIA License
-  - https://docs.nvidia.com/cuda/nvjpeg2000/license.html
-- Copyright: NVIDIA Corporation
+AMD rocJPEG
+- License: MIT License
+  - https://github.com/ROCm/rocJPEG
+- Copyright: AMD Corporation
 
 libspng
 - License: BSD-2-Clause License
