@@ -77,7 +77,7 @@ static void test_basic(benchmark::State& state)
 
         cucim::io::format::IImageFormat* image_format =
             framework->acquire_interface_from_library<cucim::io::format::IImageFormat>(
-                "cucim.kit.cuslide@" XSTR(CUSLIDE_VERSION) ".so");
+                "hipcim.kit.hipslide@" XSTR(CUSLIDE_VERSION) ".so");
         //        std::cout << image_format->formats[0].get_format_name() << std::endl;
         if (image_format == nullptr)
         {

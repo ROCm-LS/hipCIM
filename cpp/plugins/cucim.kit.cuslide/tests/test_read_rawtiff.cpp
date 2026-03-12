@@ -18,7 +18,7 @@
 #include "cuslide/tiff/tiff.h"
 #include "config.h"
 
-#include <cuda_runtime.h>
+#include <cucim/cuda_runtime.h>
 #include <catch2/catch_test_macros.hpp>
 #include <fmt/format.h>
 #include <cucim/filesystem/cufile_driver.h>

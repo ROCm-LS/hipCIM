@@ -59,7 +59,7 @@ struct AppConfig
             }
         }
     }
-    std::string get_plugin_path(const char* default_value = "cucim.kit.cuslide@" XSTR(CUCIM_VERSION) ".so")
+    std::string get_plugin_path(const char* default_value = "hipcim.kit.hipslide@" XSTR(CUCIM_VERSION) ".so")
     {
         std::string plugin_path = default_value;
         if (const char* env_p = std::getenv("CUCIM_TEST_PLUGIN_PATH"))

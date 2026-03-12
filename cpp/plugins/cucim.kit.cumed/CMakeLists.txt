@@ -21,15 +21,15 @@ cmake_minimum_required(VERSION 3.30.4 FATAL_ERROR)
 
 # Set VERSION
 unset(VERSION CACHE)
-file(STRINGS ${CMAKE_CURRENT_LIST_DIR}/../../../VERSION VERSION)
+file(STRINGS ${CMAKE_CURRENT_LIST_DIR}/../../../HIPCIM_VERSION VERSION)
 # strip alpha version info
 string(REGEX REPLACE "a.*$" "" VERSION ${VERSION})
 
 # Append local cmake module path
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/modules")
 
-project(cumed VERSION ${VERSION} DESCRIPTION "cumed" LANGUAGES CXX)
-set(CUCIM_PLUGIN_NAME "cucim.kit.cumed")
+project(hipmed VERSION ${VERSION} DESCRIPTION "hipmed" LANGUAGES CXX)
+set(CUCIM_PLUGIN_NAME "hipcim.kit.hipmed")
 
 ################################################################################
 # Include utilities
@@ -69,7 +69,8 @@ if (NOT CMAKE_RUNTIME_OUTPUT_DIRECTORY)
 endif()
 
 # Find CUDAToolkit
-find_package(CUDAToolkit REQUIRED)
+#find_package(CUDAToolkit REQUIRED)
+find_package(HIP REQUIRED)
 # For Threads::Threads
 find_package(Threads REQUIRED)
 
@@ -77,7 +78,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
 # Include CUDA headers explicitly for VSCode intelli-sense
-include_directories(AFTER SYSTEM ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+#include_directories(AFTER SYSTEM ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+include_directories(AFTER SYSTEM ${HIP_INCLUDE_DIRECTORIES})
 
 # Disable visibility to not expose unnecessary symbols
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
@@ -85,7 +87,8 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
 
 # Set RPATH
 if (NOT APPLE)
-    set(CMAKE_INSTALL_RPATH $ORIGIN)
+    set(CMAKE_INSTALL_RPATH "$ORIGIN;/opt/rocm/lib")
+    set(CMAKE_BUILD_RPATH "$ORIGIN;/opt/rocm/lib")
 endif()
 
 # Set Installation setup
@@ -129,9 +132,9 @@ else()
     message("CUCIM_SDK_PATH is set to ${CUCIM_SDK_PATH}")
 endif()
 
-find_package(cucim CONFIG REQUIRED
-    HINTS ${CUCIM_SDK_PATH}/install/${CMAKE_INSTALL_LIBDIR}/cmake/cucim
-          $ENV{PREFIX}/include/cmake/cucim # In case conda build is used
+find_package(hipcim CONFIG REQUIRED
+    HINTS ${CUCIM_SDK_PATH}/install/${CMAKE_INSTALL_LIBDIR}/cmake/hipcim
+          $ENV{PREFIX}/include/cmake/hipcim # In case conda build is used
     )
 
 
@@ -164,14 +167,15 @@ set_target_properties(${CUCIM_PLUGIN_NAME}
 )
 target_compile_features(${CUCIM_PLUGIN_NAME} PRIVATE cxx_std_17)
 # Use generator expression to avoid `nvcc fatal   : Value '-std=c++17' is not defined for option 'Werror'`
-target_compile_options(${CUCIM_PLUGIN_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Werror -Wall -Wextra>)
+#target_compile_options(${CUCIM_PLUGIN_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Werror -Wall -Wextra>)
+target_compile_definitions(${CUCIM_PLUGIN_NAME} PRIVATE __HIP_PLATFORM_AMD__)
+
 
 # Link libraries
 target_link_libraries(${CUCIM_PLUGIN_NAME}
         PRIVATE
-            CUDA::cudart
             deps::fmt
-            cucim::cucim
+            hipcim::hipcim
         )
 
 target_include_directories(${CUCIM_PLUGIN_NAME}

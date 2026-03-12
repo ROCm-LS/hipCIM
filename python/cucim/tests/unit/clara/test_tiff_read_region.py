@@ -180,7 +180,7 @@ def test_array_interface_support(testimg_tiff_stripe_32x24_16_jpeg):
     assert array_interface["shape"] == tuple(whole_img.shape)
     assert array_interface["version"] == 3
 
-
+@pytest.mark.skip(reason="rocJPEG resolution support limited to [64 - 16384]")
 def test_cuda_array_interface_support(testimg_tiff_stripe_32x24_16_jpeg):
     img = open_image_cucim(testimg_tiff_stripe_32x24_16_jpeg)
     whole_img = img.read_region(device="cuda")

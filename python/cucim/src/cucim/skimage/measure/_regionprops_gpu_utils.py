@@ -11,7 +11,22 @@ CUPY_GTE_13_3_0 = parse(cp.__version__) >= parse("13.3.0")
 # Need some default includes so uint32_t, uint64_t, etc. are defined
 
 if CUPY_GTE_13_3_0:
-    _includes = r"""
+    _includes = ""
+    if cp.cuda.runtime.is_hip: # for hip
+        _includes = r"""
+#if HIP_VERSION_MAJOR > 6
+#include <type_traits>
+#include <cstdint>
+#else
+using int8_t = __hip_internal::int8_t;
+using int16_t = __hip_internal::int16_t;
+namespace std {
+    using int8_t = __hip_internal::int8_t;
+    using int16_t = __hip_internal::int16_t;
+}
+#endif
+"""
+    _includes += r"""
 #include <cupy/cuda_workaround.h>  // provide std:: coverage
 """
 else:

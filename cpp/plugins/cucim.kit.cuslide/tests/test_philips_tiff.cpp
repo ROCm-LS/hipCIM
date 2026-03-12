@@ -22,15 +22,16 @@
 #include <catch2/catch_test_macros.hpp>
 #include <chrono>
 
-TEST_CASE("Verify philips tiff file", "[test_philips_tiff.cpp]")
+TEST_CASE("Verify philips tiff file", "[generic_tiff_000.tif]")
 {
+    fmt::print("Read Philips TIFF File\n");
 
-    auto tif = std::make_shared<cuslide::tiff::TIFF>(g_config.get_input_path("private/philips_tiff_000.tif").c_str(),
+    auto tif = std::make_shared<cuslide::tiff::TIFF>(g_config.get_input_path("private/generic_tiff_000.tif").c_str(),
                                                      O_RDONLY); // , cuslide::tiff::TIFF::kUseLibTiff
     tif->construct_ifds();
 
-    int64_t test_sx = 0;
-    int64_t test_sy = 0;
+    int64_t test_sx = 1;
+    int64_t test_sy = 1;
 
     int64_t test_width = 500;
     int64_t test_height = 500;
@@ -46,7 +47,7 @@ TEST_CASE("Verify philips tiff file", "[test_philips_tiff.cpp]")
     request.level = 0;
     int64_t request_size[2] = { test_width, test_height };
     request.size = request_size;
-    request.device = const_cast<char*>("cpu");
+    request.device = const_cast<char*>("cuda");
 
     tif->read(&metadata.desc(), &request, &image_data);
 

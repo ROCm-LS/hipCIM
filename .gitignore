@@ -54,6 +54,20 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
+# C++ Code Coverage (LLVM)
+*.profraw
+*.profdata
+coverage_report/
+rawprofiles.list
+merged.profdata
+coverage.lcov
+
+# C++ Code Coverage (GCC)
+*.gcno
+*.gcda
+*.gcov
+out_coverage/
+
 # Translations
 *.mo
 *.pot
@@ -150,8 +164,13 @@ python/cucim/docs/notebooks
 .conda
 conda-bld
 
-# Large Images
-*.svs
-
 # Custom debug environment setup script for VS Code (used by scripts/debug_python)
 /scripts/debug_env.sh
+tags
+hipcim_dev
+/_build
+
+# Doxygen files
+docs/doxygen/html
+docs/doxygen/xml
+docs/_doxygen

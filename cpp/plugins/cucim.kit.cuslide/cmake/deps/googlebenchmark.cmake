@@ -17,7 +17,7 @@ if (NOT TARGET deps::googlebenchmark)
     FetchContent_Declare(
             deps-googlebenchmark
             GIT_REPOSITORY https://github.com/google/benchmark.git
-            GIT_TAG v1.5.1
+            GIT_TAG v1.5.5
             GIT_SHALLOW TRUE
             EXCLUDE_FROM_ALL
     )

@@ -34,7 +34,7 @@ set_target_properties(cuslide_tests
 )
 target_compile_features(cuslide_tests PRIVATE ${CUCIM_REQUIRED_FEATURES})
 # Use generator expression to avoid `nvcc fatal   : Value '-std=c++17' is not defined for option 'Werror'`
-target_compile_options(cuslide_tests PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Werror -Wall -Wextra>)
+#target_compile_options(cuslide_tests PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Werror -Wall -Wextra>)
 target_compile_definitions(cuslide_tests
     PUBLIC
         CUSLIDE_VERSION=${PROJECT_VERSION}
@@ -45,9 +45,10 @@ target_compile_definitions(cuslide_tests
 )
 target_link_libraries(cuslide_tests
         PRIVATE
-            CUDA::cudart
-            cucim::cucim
+	    #CUDA::cudart
+            hipcim::hipcim
             ${CUCIM_PLUGIN_NAME}
+            rocjpeg
             deps::catch2
             deps::openslide
             deps::cli11

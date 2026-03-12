@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021-2025, NVIDIA CORPORATION.
+# Copyright (c) 2021, NVIDIA CORPORATION.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -14,19 +14,61 @@
 #
 
 if (NOT TARGET deps::boost-header-only)
-    find_package(Git REQUIRED)
     set(Boost_VERSION 1.75.0)
     set(boost_component_list "interprocess" "config" "intrusive" "move" "assert" "static_assert" "container" "core" "date_time" "smart_ptr" "throw_exception" "utility" "type_traits" "numeric/conversion" "mpl" "preprocessor" "container_hash" "integer" "detail")
-
-    message(STATUS "Fetching boost-header-only sources")
-    FetchContent_Populate(deps-boost-header-only
-        GIT_REPOSITORY https://github.com/boostorg/boost.git
-        GIT_TAG boost-${Boost_VERSION}
-        GIT_SHALLOW TRUE
-        PATCH_COMMAND ${GIT_EXECUTABLE} apply "${CMAKE_CURRENT_LIST_DIR}/boost-header-only.patch" --directory=libs/interprocess)
-    message(STATUS "Fetching boost-header-only sources - done")
+    FetchContent_Declare(
+            deps-boost-header-only
+            GIT_REPOSITORY https://github.com/boostorg/boost.git
+            GIT_TAG boost-${Boost_VERSION}
+            GIT_SHALLOW TRUE
+    )
 
     FetchContent_GetProperties(deps-boost-header-only)
+    if (NOT deps-boost-header-only_POPULATED)
+        message(STATUS "Fetching boost-header-only sources")
+        FetchContent_Populate(deps-boost-header-only)
+        message(STATUS "Fetching boost-header-only sources - done")
+
+        message(STATUS "Applying patch for boost-header-only")
+        find_package(Git)
+        if(Git_FOUND OR GIT_FOUND)
+            execute_process(
+                COMMAND bash -c "${GIT_EXECUTABLE} reset HEAD --hard && ${GIT_EXECUTABLE} apply ${CMAKE_CURRENT_LIST_DIR}/boost-header-only.patch"
+                WORKING_DIRECTORY "${deps-boost-header-only_SOURCE_DIR}/libs/interprocess"
+                RESULT_VARIABLE exec_result
+                ERROR_VARIABLE exec_error
+                ERROR_STRIP_TRAILING_WHITESPACE
+                OUTPUT_VARIABLE exec_output
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+                )
+            if(exec_result EQUAL 0)
+                message(STATUS "Applying patch for boost-header-only - done")
+            else()
+                message(STATUS "Applying patch for boost-header-only - failed")
+                message(FATAL_ERROR "${exec_output}\n${exec_error}")
+            endif()
+        endif ()
+        file(WRITE "${CMAKE_BINARY_DIR}/boost-ulong-long-fix.patch"
+            "--- a/include/boost/core/bit.hpp\n"
+            "+++ b/include/boost/core/bit.hpp\n"
+            "@@ -93,7 +93,7 @@\n"
+            "    # Original line with ulong_long_type\n"
+            "-   struct builtin_clz_dispatch< ::boost::ulong_long_type >\n"
+            "+   struct builtin_clz_dispatch< unsigned long long >\n"
+        )
+        message(STATUS "Applying patch for boost-long-long-error")
+        execute_process(
+            COMMAND ${GIT_EXECUTABLE} apply "${CMAKE_BINARY_DIR}/boost-ulong-long-fix.patch"
+            WORKING_DIRECTORY "${deps-boost-header-only_SOURCE_DIR}"
+            RESULT_VARIABLE patch_result
+        )
+        if(NOT patch_result EQUAL 0)
+            message(WARNING "Failed to apply ulong_long_type patch, but continuing anyway.")
+        else()
+            message(STATUS "Sucessfully applied patch for boost-long-long-error")
+        endif()
+    endif ()
+
     add_library(deps::boost-header-only INTERFACE IMPORTED GLOBAL)
 
     unset(boost_include_string)

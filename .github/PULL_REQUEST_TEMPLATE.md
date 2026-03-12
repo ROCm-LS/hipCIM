@@ -42,3 +42,26 @@ Here are some guidelines to help the review process go smoothly.
 Many thanks in advance for your cooperation!
 
 -->
+
+## Required PR Checklist
+
+Please complete all items below before requesting review:
+
+- [ ] Commit title includes ticket number
+- [ ] Commit title clearly states what this commit changes
+- [ ] Commit message clearly explains why this commit is needed
+- [ ] Commit message includes how this PR/commit was tested
+
+## Commit Message Details
+
+### What is this commit about?
+
+<!-- Briefly describe what changed. -->
+
+### Why is this commit needed?
+
+<!-- Briefly explain the motivation or problem being solved. -->
+
+### How was this PR tested?
+
+<!-- List tests run (unit/integration/manual), commands, and results. -->

@@ -17,9 +17,10 @@ if (NOT TARGET deps::abseil)
     FetchContent_Declare(
             deps-abseil
             GIT_REPOSITORY https://github.com/abseil/abseil-cpp.git
-            GIT_TAG 20200225.2
+            GIT_TAG 20250127.1
             GIT_SHALLOW TRUE
             EXCLUDE_FROM_ALL
+            SYSTEM
     )
 
     # Create static library

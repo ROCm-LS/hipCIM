@@ -20,8 +20,10 @@ from ...util.io import open_image_cucim
 
 # skip if imagecodecs package not available (needed by ImageGenerator utility)
 pytest.importorskip("imagecodecs")
-
-
+@pytest.mark.skip(
+    reason="Uses device-wide mem_info which is affected by other processes "
+    "on the same GPU, causing false positives in shared environments."
+)
 def test_read_region_cuda_memleak(testimg_tiff_stripe_4096x4096_256_jpeg):
     def get_used_gpu_memory_mib():
         """Get the used GPU memory in MiB."""
@@ -257,7 +259,7 @@ def test_tiff_iterator(testimg_tiff_stripe_4096x4096_256):
                     mem_usage_history.append(memory_increase)
                     print(
                         f"mem increase (iteration: {i:3d}): "
-                        "{memory_increase:4d} MB"
+                        f"{memory_increase:4d} MB"
                     )
         # Memory usage difference should be less than 20MB
         assert mem_usage_history[-1] - mem_usage_history[1] < 20

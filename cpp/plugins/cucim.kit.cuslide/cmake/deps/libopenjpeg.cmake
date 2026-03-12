@@ -49,6 +49,15 @@ if (NOT TARGET deps::libopenjpeg)
     # : /usr/bin/ld: lib/libopenjp2.a(cio.c.o): relocation R_X86_64_PC32 against symbol `opj_stream_read_skip' can not be used when making a shared object; recompile with -fPIC
     #   /usr/bin/ld: final link failed: bad value
     set_target_properties(openjp2_static PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+    # Set proper RPATH on the shared openjp2 library
+    if (TARGET openjp2)
+        set_target_properties(openjp2 PROPERTIES
+            BUILD_RPATH "$ORIGIN"
+            INSTALL_RPATH "$ORIGIN"
+        )
+    endif()
+
     cucim_restore_build_shared_libs()
 
     add_library(deps::libopenjpeg INTERFACE IMPORTED GLOBAL)

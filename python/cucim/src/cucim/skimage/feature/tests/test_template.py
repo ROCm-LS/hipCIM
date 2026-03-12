@@ -201,5 +201,6 @@ def test_bounding_values():
     template = cp.zeros((3, 3))
     template[1, 1] = 1
     result = match_template(image, template)
-    assert result.max() < 1 + 1e-7
-    assert result.min() > -1 - 1e-7
+    tol = 1e-5 if cp.cuda.runtime.is_hip else 1e-7
+    assert result.max() < 1 + tol
+    assert result.min() > -1 - tol

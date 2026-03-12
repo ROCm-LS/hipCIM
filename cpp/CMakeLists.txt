@@ -19,7 +19,6 @@
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.19")
     cmake_policy(SET CMP0110 NEW) # For add_test() to support arbitrary characters in test name
 endif()
-
 ################################################################################
 # Define compile options
 ################################################################################
@@ -37,7 +36,10 @@ endif()
 ################################################################################
 add_library(${CUCIM_PACKAGE_NAME}
         src/core/framework.cpp
+        include/cucim/boost_compat.h
         include/cucim/cuimage.h
+        include/cucim/cuda_runtime.h
+        include/cucim/cuda_runtime_api.h
         include/cucim/cache/image_cache.h
         include/cucim/cache/image_cache_config.h
         include/cucim/cache/image_cache_manager.h
@@ -72,8 +74,8 @@ add_library(${CUCIM_PACKAGE_NAME}
         include/cucim/profiler/nvtx3.h
         include/cucim/profiler/profiler.h
         include/cucim/profiler/profiler_config.h
-        include/cucim/util/cuda.h
         include/cucim/util/file.h
+        include/cucim/util/cuda.h
         include/cucim/util/platform.h
         include/cucim/3rdparty/dlpack/dlpack.h
         include/cucim/3rdparty/dlpack/dlpackcpp.h
@@ -115,6 +117,10 @@ add_library(${CUCIM_PACKAGE_NAME}
         src/util/file.cpp
         src/util/platform.cpp)
 
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cpp/cmake/modules")
+project(libcucim VERSION ${VERSION} DESCRIPTION "libcucim" LANGUAGES CXX)
+
 # Compile options
 set_target_properties(${CUCIM_PACKAGE_NAME}
     PROPERTIES
@@ -124,11 +130,14 @@ set_target_properties(${CUCIM_PACKAGE_NAME}
         SOVERSION ${PROJECT_VERSION_MAJOR}
         VERSION ${PROJECT_VERSION}
 )
+target_compile_definitions(${CUCIM_PACKAGE_NAME} PRIVATE __HIP_PLATFORM_AMD__)
+
 
 # Note: Looks like the following line causes error on CMake 3.18.4 (it is working on 3.18.2). Keeping it for now.
 set(CUCIM_REQUIRED_FEATURES cxx_std_17)
 target_compile_features(${CUCIM_PACKAGE_NAME} PRIVATE ${CUCIM_REQUIRED_FEATURES})
 # Use generator expression to avoid `nvcc fatal   : Value '-std=c++17' is not defined for option 'Werror'`
+# TODO: Fix this
 target_compile_options(${CUCIM_PACKAGE_NAME}
     PRIVATE
         $<$<COMPILE_LANGUAGE:CXX>:-Werror -Wall -Wextra>
@@ -140,10 +149,10 @@ target_compile_definitions(${CUCIM_PACKAGE_NAME}
         CUCIM_VERSION_MINOR=${PROJECT_VERSION_MINOR}
         CUCIM_VERSION_PATCH=${PROJECT_VERSION_PATCH}
         CUCIM_VERSION_BUILD=${PROJECT_VERSION_BUILD}
-        CUCIM_SUPPORT_GDS=$<BOOL:${CUCIM_SUPPORT_GDS}>
-        CUCIM_STATIC_GDS=$<BOOL:${CUCIM_STATIC_GDS}>
-        CUCIM_SUPPORT_CUDA=$<BOOL:${CUCIM_SUPPORT_CUDA}>
-        CUCIM_SUPPORT_NVTX=$<BOOL:${CUCIM_SUPPORT_NVTX}>
+        CUCIM_SUPPORT_GDS=0 #$<BOOL:${CUCIM_SUPPORT_GDS}>
+        CUCIM_STATIC_GDS=0 #$<BOOL:${CUCIM_STATIC_GDS}>
+        CUCIM_SUPPORT_CUDA=1# $<BOOL:${CUCIM_SUPPORT_CUDA}>
+        CUCIM_SUPPORT_NVTX=0 #$<BOOL:${CUCIM_SUPPORT_NVTX}>
         _GLIBCXX_USE_CXX11_ABI=0  # TODO: create two library, one with CXX11 ABI and one without it.
 )
 
@@ -153,9 +162,8 @@ target_link_libraries(${CUCIM_PACKAGE_NAME}
             ${CMAKE_DL_LIBS}
             Threads::Threads # -lpthread
             $<BUILD_INTERFACE:deps::fmt>
-            $<INSTALL_INTERFACE:cucim::fmt-header-only>
+            $<INSTALL_INTERFACE:hipcim::fmt-header-only>
         PRIVATE
-            CUDA::cudart
             deps::abseil
             deps::gds
             deps::libcuckoo
@@ -176,7 +184,7 @@ endif ()
 target_include_directories(${CUCIM_PACKAGE_NAME}
         PUBLIC
             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${CUCIM_PACKAGE_NAME}/3rdparty>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/cucim/3rdparty>
             $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
             $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${CUCIM_PACKAGE_NAME}/3rdparty> # for 3rdparty libraries such as dlpack, nvtx3, and fmt
         PRIVATE

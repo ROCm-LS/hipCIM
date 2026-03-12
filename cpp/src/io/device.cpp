@@ -19,6 +19,10 @@
 #include <regex>
 #include <string>
 #include <string_view>
+#ifdef __HIP_PLATFORM_AMD__
+#include <cctype>
+#include <cassert>
+#endif // __HIP_PLATFORM_AMD__
 
 #include <fmt/format.h>
 
@@ -27,6 +31,33 @@
 
 namespace cucim::io
 {
+#ifdef __HIP_PLATFORM_AMD__
+// Helper functions for parsing and trimming
+inline bool is_valid_type(const std::string& type) {
+    if (type.empty()) return false;
+    for (char c : type) {
+        if (!std::islower(c)) return false;
+    }
+    return true;
+}
+
+inline bool is_valid_index(const std::string& index) {
+    if (index.empty()) return false;
+    if (index == "0") return true;
+    if (index[0] == '0') return false; // leading zero not allowed except "0"
+    for (char c : index)
+        if (!std::isdigit(c)) return false;
+    return true;
+}
+
+inline bool is_valid_shm(const std::string& shm) {
+    if (shm.empty()) return false;
+    for (char c : shm) {
+        if (!(std::isalnum(c) || c == '-' || c == '_' || c == '.')) return false;
+    }
+    return true;
+}
+#endif // __HIP_PLATFORM_AMD__
 
 Device::Device()
 {
@@ -40,6 +71,7 @@ Device::Device(const Device& device) : type_(device.type_), index_(device.index_
 Device::Device(const std::string& device_name)
 {
     // 'cuda', 'cuda:0', 'cpu[shm0]', 'cuda:0[cuda_shm0]'
+#ifndef __HIP_PLATFORM_AMD__
     static const std::regex name_regex("([a-z]+)(?::(0|[1-9]\\d*))?(?:\\[([a-zA-Z0-9_\\-][a-zA-Z0-9_\\-\\.]*)\\])?");
 
     std::smatch match;
@@ -59,7 +91,45 @@ Device::Device(const std::string& device_name)
     {
         CUCIM_ERROR("Device name doesn't match!");
     }
+#else // __HIP_PLATFORM_AMD__
+    std::string type, index, shm;
 
+    size_t col_pos = device_name.find(':');
+    size_t lbrack_pos = device_name.find('[');
+    size_t rbrack_pos = device_name.find(']');
+
+    // Extract type
+    size_t type_end = (col_pos != std::string::npos) ? col_pos
+                    : (lbrack_pos != std::string::npos ? lbrack_pos
+                    : device_name.size());
+    type = device_name.substr(0, type_end);
+
+    // Optional index
+    if (col_pos != std::string::npos) {
+        size_t index_start = col_pos + 1;
+        size_t index_end = lbrack_pos != std::string::npos ? lbrack_pos : device_name.size();
+        index = device_name.substr(index_start, index_end - index_start);
+    }
+
+    // Optional shm
+    if (lbrack_pos != std::string::npos && rbrack_pos != std::string::npos && lbrack_pos < rbrack_pos) {
+        shm = device_name.substr(lbrack_pos + 1, rbrack_pos - lbrack_pos - 1);
+    }
+
+    // Validate and assign
+    if (is_valid_type(type)
+        && (index.empty() || is_valid_index(index))
+        && (shm.empty() || is_valid_shm(shm)))
+    {
+        type_ = parse_type(type);
+        if (!index.empty())
+            index_ = std::stoi(index);
+        if (!shm.empty())
+            shm_name_ = shm;
+    } else {
+        CUCIM_ERROR("Device name doesn't match!");
+    }
+#endif // !__HIP_PLATFORM_AMD__
     validate_device();
 }
 Device::Device(const char* device_name) : Device::Device(std::string(device_name))

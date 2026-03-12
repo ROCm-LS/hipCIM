@@ -53,7 +53,7 @@ if (NOT TARGET deps::libtiff)
     set(TIFF_INCLUDES ${deps-libjpeg-turbo_SOURCE_DIR} ${deps-libjpeg-turbo_BINARY_DIR} )
 
     # Explicitly disable external codecs
-    set(zlib OFF)
+    set(zlib ON)
     set(pixarlog OFF)
     set(lzma OFF)
     set(old-jpeg OFF)
