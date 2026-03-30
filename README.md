@@ -81,7 +81,7 @@ This library is an extensible toolkit designed to provide GPU accelerated I/O, c
 - Install hipcim
   ```
   #For ROCm 7.2
-  pip install amd-hipcim --extra-index-url=https://pypi.amd.com/rocm-7.2/simple/
+  pip install amd-hipcim --extra-index-url=https://pypi.amd.com/rocm-7.2.0/simple/
   #For ROCm 7.0
   pip install amd-hipcim --extra-index-url=https://pypi.amd.com/rocm-7.0.2/simple/
   ```
@@ -256,7 +256,7 @@ Please use the below steps to build the hipCIM library on a ROCM based MI300 sys
 - Install the hipCIM python3 package
   ```bash
   #For ROCm 7.2
-  python3 -m pip install python/cucim --extra-index-url https://pypi.amd.com/rocm-7.2/simple/
+  python3 -m pip install python/cucim --extra-index-url https://pypi.amd.com/rocm-7.2.0/simple/
   #For ROCm 7.0
   python3 -m pip install python/cucim --extra-index-url https://pypi.amd.com/rocm-7.0.2/simple/
   ```
