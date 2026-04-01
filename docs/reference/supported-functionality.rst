@@ -8,7 +8,7 @@
 Supported features and limitations
 ***********************************
 
-This topic summarizes the hipCIM features and limitations.
+This topic discusses the supported features and limitations of hipCIM 25.10.00 as compared to the `cuCIM 25.10.00 <https://github.com/rapidsai/cucim/releases/tag/v25.10.00>`_.
 
 Features
 ---------
@@ -37,7 +37,7 @@ Features
 
   - All color space conversions (rgb2gray, rgb2hsv, and rgb2lab) are GPU-accelerated.
 
-  - Specialized operations for medical imaging, such as stain separation or combination, also benefit from GPU acceleration.
+  - Specialized medical imaging operations, such as stain separation or combination, that also benefit from GPU acceleration.
 
 - **Whole slide imaging:**
 
@@ -47,9 +47,9 @@ Features
 
 - **Measurement functions:**
 
-  - Core measurement functions like region labeling are GPU-accelerated.
+  - Core measurement functions such as region labeling are GPU-accelerated.
 
-  - Some advanced functions like ``marching_cubes`` lack GPU acceleration.
+  - Some advanced functions such as ``marching_cubes`` lack GPU acceleration.
 
 Image support
 --------------
@@ -66,6 +66,8 @@ hipCIM API mirrors `scikit-image <https://scikit-image.org/>`_ for image manipul
 
 Limitations
 ------------
+
+- Multilevel TIFF image support is under development.
 
 - No Support for JPEG2K compression.
 

@@ -29,7 +29,7 @@ with open('../HIPCIM_VERSION', encoding='utf-8') as f:
 # for PDF output on Read the Docs
 project = "hipCIM"
 author = "Advanced Micro Devices, Inc."
-copyright = "Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved."
+copyright = "Copyright (c) 2026 Advanced Micro Devices, Inc. All rights reserved."
 version = version_number
 release = version_number
 
@@ -73,3 +73,4 @@ autodoc_default_options = {
 html_title = f"{project} {version_number} documentation"
 
 external_projects_current_project = "hipCIM"
+external_project_remote_repository = ""
