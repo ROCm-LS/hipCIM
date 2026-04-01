@@ -14,6 +14,14 @@ flavor options: rocm, rocm-docs-home, rocm-blogs, rocm-ds, instinct, ai-develope
 html_theme = "rocm_docs_theme"
 html_theme_options = {"flavor": "rocm-ls"}
 
+'''
+docs_header_version is used to manually configure the version in the header. If
+there exists a non-null value mapped to docs_header_version, then the header in
+the documentation page will contain the given version string.
+'''
+html_context = {
+    "docs_header_version": "26.03"
+}
 
 # This section turns on/off article info
 setting_all_article_info = True
