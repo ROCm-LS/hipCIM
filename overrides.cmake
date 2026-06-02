@@ -1,6 +1,7 @@
+# =============================================================================
 # MIT License
 #
-# Modifications Copyright (C) 2023-2025 Advanced Micro Devices, Inc. All rights reserved.
+# Copyright (C) 2024-2026 Advanced Micro Devices, Inc. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -19,9 +20,6 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+# =============================================================================
 
-# NOTE(HIP/AMD): This overrides must be placed in a separate file according to https://discourse.cmake.org/t/extend-list-of-file-extensions-for-a-language-globally-for-the-whole-project/7307/6
-#set(CMAKE_C_COMPILER "/opt/rocm/bin/amdclang")
-#set(CMAKE_CXX_COMPILER "/opt/rocm/bin/amdclang++")
-#set(CMAKE_HIP_COMPILER "/opt/rocm/bin/amdclang++")
 set(CMAKE_HIP_SOURCE_FILE_EXTENSIONS hip;cu)

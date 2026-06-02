@@ -1,14 +1,20 @@
 ==============================================================================
 
-hipCIM: A high-performance GPU imaging library that accelerates and scales image processing workflows on AMD Instinct™ GPUs
+hipCIM: A high-performance GPU imaging library that accelerates and scales image processing workflows on AMD Instinct(TM) GPUs
 
-This project is derived from the cuCIM project by NVIDIA Corporation, which is licensed under the Apache License, Version 2.0 (see LICENSE).
+This project is derived from the cuCIM project by NVIDIA Corporation, which is
+licensed under the Apache License, Version 2.0 (see LICENSE).
 
-Parts of this software are based on, or derived from, code covered under the Apache License, Version 2.0. You may not use such portions except in compliance with the License. A copy of the Apache License is provided in LICENSE and available at:
+Portions of this software are based on, or derived from, code covered under the
+Apache License, Version 2.0. You may not use such portions except in compliance
+with the License. A copy of the Apache License is provided in LICENSE and is
+also available at:
 
-http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
-Additional modifications and new components introduced by AMD are provided under the MIT License.
+Modifications and new components introduced by AMD are provided under the MIT
+License. The full MIT License text is reproduced below and is also included as
+a header comment in each AMD-authored or AMD-modified file.
 
 ==============================================================================
 

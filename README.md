@@ -445,6 +445,8 @@ is used in this project.
 
 ## License
 
-Apache-2.0 License (see [LICENSE](LICENSE) file).
+Apache-2.0 License (see [LICENSE](LICENSE) file) for upstream cuCIM portions.
+MIT License for AMD modifications and new components (see [NOTICE.txt](NOTICE.txt)).
 
-Copyright (c) 2025, AMD CORPORATION.
+Copyright (c) 2020-2026, NVIDIA CORPORATION.
+Modifications Copyright (c) 2024-2026, Advanced Micro Devices, Inc. All rights reserved.
