@@ -1,6 +1,6 @@
-hipCIM is licensed under the terms of the Apache-2.0 License.
+cuCIM is licensed under the terms of the Apache-2.0 License.
 
-However, hipCIM utilizes third-party software from various sources.
+However, cuCIM utilizes third-party software from various sources.
 Portions of this software are copyrighted by their respective owners as indicated in the copyright
 notices below.
 
@@ -85,10 +85,23 @@ DLPack
   - https://github.com/dmlc/dlpack/blob/main/LICENSE
 - Copyright: DLPack Contributors
 
-NVIDIA CUDA TOOLKIT (including libcufile/libnvjpeg)
+NVIDIA CUDA TOOLKIT (including libcufile)
 - License: NVIDIA License
   - https://docs.nvidia.com/cuda/pdf/EULA.pdf
 - Copyright: NVIDIA Corporation
+
+AMD ROCm Runtime (HIP, hipcub, rocThrust, hipBLAS, hipFFT, hipSPARSE, hipRAND, rocSOLVER, rocRAND)
+- License: MIT License
+  - https://github.com/ROCm/ROCm/blob/develop/LICENSE.txt
+- Copyright: Advanced Micro Devices, Inc.
+
+AMD rocJPEG
+- License: MIT License
+  - https://github.com/ROCm/rocJPEG/blob/develop/LICENSE
+- Copyright: Advanced Micro Devices, Inc.
+- Files:
+  - cpp/plugins/cucim.kit.cuslide/src/cuslide/loader/rocjpeg_processor.cpp : Implementation of jpeg decoder via rocJPEG.
+  - cpp/plugins/cucim.kit.cuslide/src/cuslide/loader/rocjpeg_processor.h
 
 OpenJPEG
 - License: BSD-2-Clause License
@@ -106,11 +119,6 @@ OpenJPEG
 - Files:
   - cpp/plugins/cucim.kit.cuslide/src/cuslide/jpeg2k/libopenjpeg.cpp : Implementation of jpeg2k decoder.
   - cpp/plugins/cucim.kit.cuslide/src/cuslide/jpeg2k/color_conversion.cpp : Implementation of color conversion methods.
-
-AMD rocJPEG
-- License: MIT License
-  - https://github.com/ROCm/rocJPEG
-- Copyright: AMD Corporation
 
 libspng
 - License: BSD-2-Clause License
