@@ -28,7 +28,7 @@ hipCIM key features include:
 
 In essence, hipCIM provides a versatile platform that bridges diverse hardware ecosystems, enabling greater flexibility and efficiency in deploying advanced image processing workloads.
 
-The code is open and hosted at `<https://github.com/ROCm-LS/hipCIM>`_.
+The code is open and hosted at `<https://github.com/AMD-Ecosystem/hipCIM>`_.
 
 The documentation is structured as follows:
 
@@ -48,7 +48,7 @@ The documentation is structured as follows:
     * `hipCIM blog <https://rocm.blogs.amd.com/software-tools-optimization/hipcim-intro/README.html>`_
 
 To contribute to hipCIM, refer to
-`Contributing to hipCIM <https://github.com/ROCm-LS/hipCIM/blob/main/CONTRIBUTING.md>`_.
+`Contributing to hipCIM <https://github.com/AMD-Ecosystem/hipCIM/blob/main/CONTRIBUTING.md>`_.
 
 You can find licensing information on the
 :doc:`Licensing <license>` page.
