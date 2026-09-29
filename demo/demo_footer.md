@@ -1,5 +1,5 @@
 <p style="font-size:12px;">
-Refer <a href="https://github.com/ROCm-LS/">ROCm-LS</a> for the latest updates.
+Refer <a href="https://github.com/AMD-Ecosystem/">AMD-Ecosystem</a> for the latest updates.
 </p>
 <p style="font-size:12px;">
 Drop in your questions/suggestions/feedback at <a href="mailto:ROCm-LSSupport@amd.com">ROCm-LSSupport@amd.com</a>.

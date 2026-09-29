@@ -38,7 +38,7 @@ RUN mkdir -p /root/.ssh && \
 
 # Clone the repository using the private key
 RUN GIT_SSH_COMMAND='ssh -i /root/.ssh/id_ed25519 -o IdentitiesOnly=yes' \
-    git clone git@github.com:AMD-AIOSS/hipCIM.git /app/hipCIM
+    git clone git@github.com:AMD-Ecosystem/hipCIM.git /app/hipCIM
 
 # Remove SSH key for security (should be in a multi-stage build for true safety)
 RUN rm -f /root/.ssh/id_ed25519

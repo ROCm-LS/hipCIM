@@ -102,7 +102,7 @@ Please use the below steps to build the hipCIM library on a ROCM based MI300 sys
 
 - Checkout the latest version of hipCIM from git
   ```bash
-  git clone git@github.com:ROCm-LS/hipCIM.git
+  git clone git@github.com:AMD-Ecosystem/hipCIM.git
   cd hipCIM
   ```
 
@@ -158,7 +158,7 @@ Quick commands:
 ## Contributing Guide
 
 Contributions to hipCIM are more than welcome!
-Please review the [CONTRIBUTING.md](https://github.com/ROCm-LS/hipCIM/CONTRIBUTING.md) file for information on how to contribute code and issues to the project.
+Please review the [CONTRIBUTING.md](https://github.com/AMD-Ecosystem/hipCIM/CONTRIBUTING.md) file for information on how to contribute code and issues to the project.
 
 ## Acknowledgments
 
