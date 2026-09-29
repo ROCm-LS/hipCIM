@@ -191,8 +191,8 @@ Packaged versions of hipCIM and its dependencies are distributed via `AMD PyPI <
       Project-URLs:
          Homepage, https://rocm.docs.amd.com/projects/hipCIM/en/latest/
          Documentation, https://rocm.docs.amd.com/projects/hipCIM/en/latest/
-         Source, https://github.com/ROCm-LS/hipCIM
-         Tracker, https://github.com/ROCm-LS/hipCIM/issues
+         Source, https://github.com/AMD-Ecosystem/hipCIM
+         Tracker, https://github.com/AMD-Ecosystem/hipCIM/issues
 
 .. _source-build:
 
@@ -211,7 +211,7 @@ To build hipCIM from source, follow the steps given in this section.
 
    .. code-block:: shell
 
-      git clone git@github.com:ROCm-LS/hipCIM.git
+      git clone git@github.com:AMD-Ecosystem/hipCIM.git
       cd hipCIM
 
 3. Install the rest of the dependencies.
