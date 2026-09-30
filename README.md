@@ -124,8 +124,8 @@ This library is an extensible toolkit designed to provide GPU accelerated I/O, c
   Project-URLs:
     Homepage, https://rocm.docs.amd.com/projects/hipCIM/en/latest/
     Documentation, https://rocm.docs.amd.com/projects/hipCIM/en/latest/
-    Source, https://github.com/ROCm-LS/hipCIM
-    Tracker, https://github.com/ROCm-LS/hipCIM/issues
+    Source, https://github.com/AMD-Ecosystem/hipCIM
+    Tracker, https://github.com/AMD-Ecosystem/hipCIM/issues
   ```
 
 
@@ -233,7 +233,7 @@ Please use the below steps to build the hipCIM library on a ROCM based MI300 sys
 
 - Download the latest version of hipCIM from the git repository:
   ```
-  git clone git@github.com:ROCm-LS/hipCIM.git
+  git clone git@github.com:AMD-Ecosystem/hipCIM.git
   cd hipCIM
   ```
 - Install dependencies
@@ -379,7 +379,7 @@ Please use the below steps to build the hipCIM library on a ROCM based MI300 sys
 
 - Checkout the latest version of hipCIM from git
     ```
-    git clone git@github.com:ROCm-LS/hipCIM.git
+    git clone git@github.com:AMD-Ecosystem/hipCIM.git
     cd hipCIM
     ```
 
@@ -434,7 +434,7 @@ Quick commands:
 ## Contributing Guide
 
 Contributions to hipCIM are more than welcome!
-Please review the [CONTRIBUTING.md](https://github.com/ROCm-LS/hipCIM/CONTRIBUTING.md) file for information on how to contribute code and issues to the project.
+Please review the [CONTRIBUTING.md](https://github.com/AMD-Ecosystem/hipCIM/CONTRIBUTING.md) file for information on how to contribute code and issues to the project.
 
 ## Acknowledgments
 

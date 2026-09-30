@@ -91,4 +91,4 @@ Limitations
 
 - Backend differences:
 
-  - As hipCIM is an AMD ROCm port of cuCIM, it might differ from cuCIM in performance or numerical behavior. Validate results for mission-critical steps and `report reproducible issues <https://github.com/ROCm-LS/ROCm-LS-Docs/issues/new>`_.
+  - As hipCIM is an AMD ROCm port of cuCIM, it might differ from cuCIM in performance or numerical behavior. Validate results for mission-critical steps and `report reproducible issues <https://github.com/AMD-Ecosystem/lifescience/issues/new>`_.
