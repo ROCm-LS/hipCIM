@@ -47,8 +47,8 @@ classifiers = [
 [project.urls]
 Homepage = "https://rocm.docs.amd.com/projects/hipCIM/en/latest/"
 Documentation = "https://rocm.docs.amd.com/projects/hipCIM/en/latest/"
-Source = "https://github.com/ROCm-LS/hipCIM"
-Tracker = "https://github.com/ROCm-LS/hipCIM/issues"
+Source = "https://github.com/AMD-Ecosystem/hipCIM"
+Tracker = "https://github.com/AMD-Ecosystem/hipCIM/issues"
 
 [project.optional-dependencies]
 test = [
